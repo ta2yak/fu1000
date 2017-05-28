@@ -1,0 +1,23 @@
+{
+  "name": "sticky",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ta2yak/sticky.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ta2yak/sticky/issues"
+  },
+  "homepage": "https://github.com/ta2yak/sticky#readme",
+  "dependencies": {
+    "electron-window-manager": "^1.0.4",
+    "uuid": "^3.0.1"
+  }
+}
