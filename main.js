@@ -1,12 +1,31 @@
 const electron = require('electron');
 const windowManager = require('electron-window-manager');
+const settings = require('electron-settings');
 const uuid = require('uuid');
+const _ = require('lodash');
 const {app, BrowserWindow, Menu, Tray} = electron;
 
 let mainWindow = null;
 let tray = null;
 let contextMenu = null;
+
+// 新規の付箋を生成する
+let createSticky = function(){
+  let id = uuid.v4();
+  windowManager.open(id, 'Sticky Page', "file://" + __dirname + "/sticky/index.html" + "#" + id); 
+
+  let windows = settings.get('windows') || new Array();
+  windows.push({id: id});
+  settings.set('windows', windows);
+}
+
+// 作成済みの付箋を生成する
+let resumeSticky = function(id){
+  windowManager.open(id, 'Sticky Page', "file://" + __dirname + "/sticky/index.html" + "#" + id); 
+}
+
 app.on('ready', () => {
+
   // **************************************************
   // メインウィンドウの設定
   // **************************************************
@@ -27,7 +46,14 @@ app.on('ready', () => {
   // **************************************************
   // ウィンドウマネージャーの設定
   // **************************************************
-  windowManager.setDefaultSetup({'width': 300, 'height': 200, frame: false});
+  windowManager.setDefaultSetup({width: 340, height: 130, frame: false});
+
+  // 画面一覧を取得
+  let windows = settings.get('windows') || new Array();
+  // 画面一覧からウィンドウを復元
+  _.each(windows, function(window){
+    resumeSticky(window.id);
+  });
 
   // **************************************************
   // タスクトレイの設定
@@ -36,8 +62,7 @@ app.on('ready', () => {
   contextMenu = Menu.buildFromTemplate([
       { label: "新しい付箋を作成する", 
         click: function () {
-          let id = uuid.v4();
-          windowManager.open(uuid.v4(), 'New Window', "file://" + __dirname + "/sticky/index.html" + "#" + id); 
+          createSticky();
         } 
       },
       { label: "終了", 
@@ -51,5 +76,5 @@ app.on('ready', () => {
   tray.on("clicked", function () {
       tray.popUpContextMenu(contextMenu);
   });
-
+  
 });

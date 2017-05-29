@@ -17,7 +17,13 @@
   },
   "homepage": "https://github.com/ta2yak/sticky#readme",
   "dependencies": {
+    "electron-settings": "^3.0.14",
     "electron-window-manager": "^1.0.4",
+    "lodash": "^4.17.4",
+    "semantic-ui": "^2.2.10",
     "uuid": "^3.0.1"
+  },
+  "devDependencies": {
+    "electron": "^1.6.10"
   }
 }
