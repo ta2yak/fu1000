@@ -46,7 +46,19 @@ app.on('ready', () => {
   // **************************************************
   // ウィンドウマネージャーの設定
   // **************************************************
-  windowManager.setDefaultSetup({width: 340, height: 130, frame: false});
+  const {width, height} = electron.screen.getPrimaryDisplay().workAreaSize;
+  windowManager.setDefaultSetup(
+    {
+      width: 320, 
+      height: 260, 
+      useContentSize: true, 
+      frame: false, 
+      resizable: true,
+      minWidth: 320, 
+      minHeight: 260,
+      maxWidth: width, 
+      maxHeight: height
+    });
 
   // 画面一覧を取得
   let windows = settings.get('windows') || new Array();

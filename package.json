@@ -20,6 +20,7 @@
     "electron-settings": "^3.0.14",
     "electron-window-manager": "^1.0.4",
     "lodash": "^4.17.4",
+    "marked": "^0.3.6",
     "semantic-ui": "^2.2.10",
     "uuid": "^3.0.1"
   },

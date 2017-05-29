@@ -4,30 +4,26 @@
     <meta charset="UTF-8">
     <title>Hello World!</title>
     <link rel="stylesheet" type="text/css" href="../semantic/dist/semantic.min.css">
-    <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
-    <script src="../semantic/dist/semantic.min.js"></script>    
-    <script src="https://unpkg.com/vue"></script>
-    <script src="js/index.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/index.css">
   </head>
-  <body style="-webkit-app-region: drag">
-    <div id="app" class="ui grid">
-      <div class="ui card sixteen wide column">
+  <body>
+    <div class="ui grid">
+      <div id="card" class="ui card sixteen wide column">
         <div class="content">
-          <i class="right floated like icon">&nbsp;</i>
-          <i class="right floated star icon">&nbsp;</i>
-          <div class="header">Cute Dog</div>
           <div class="description">
-            <p>{{ message }}</p>
+            <div class="ui form">
+              <div class="field">
+                <textarea v-if="!preview" :value="input" @input="update"></textarea>
+                <div  v-if="preview" v-html="compiledMarkdown"></div>
+              </div>
+            </div>
           </div>
         </div>
         <div class="extra content">
-          <span class="left floated like">
-            <i class="like icon">&nbsp;</i>
-            Like
-          </span>
           <span class="right floated star">
-            <i class="star icon">&nbsp;</i>
-            Favorite
+            <button  v-on:click="onPreview" class="ui button">Preview</button>
+            <button  v-on:click="onSave" class="ui button">Save</button>
+            <button  v-on:click="onCancel" class="ui button">Cancel</button>
           </span>
         </div>
       </div>
@@ -35,4 +31,10 @@
     </div>
 
   </body>
+
+  <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+  <script src="../semantic/dist/semantic.min.js"></script>    
+  <script src="https://unpkg.com/vue"></script>
+  <script src="js/index.js"></script>
+
 </html>
