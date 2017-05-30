@@ -29,7 +29,7 @@ app.on('ready', () => {
   // **************************************************
   // メインウィンドウの設定
   // **************************************************
-  // メインウィンドウは表示しないため、最小化しておく
+  // メインウィンドウは表示しないため、非表示化しておく
   mainWindow = new BrowserWindow(
     {
       width: 1, 
@@ -49,13 +49,10 @@ app.on('ready', () => {
   const {width, height} = electron.screen.getPrimaryDisplay().workAreaSize;
   windowManager.setDefaultSetup(
     {
-      width: 320, 
-      height: 260, 
-      useContentSize: true, 
+      width: 340, 
+      height: 295, 
       frame: false, 
-      resizable: true,
-      minWidth: 320, 
-      minHeight: 260,
+      resizable: false,
       maxWidth: width, 
       maxHeight: height
     });

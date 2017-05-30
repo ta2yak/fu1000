@@ -1,11 +1,15 @@
-let marked = require("marked")
-let _ = require("lodash")
+const remote = require("electron").remote
+const settings = require('electron-settings');
+const marked = require("marked")
+const _ = require("lodash")
 
-new Vue({
+
+
+const vue = new Vue({
   el: '#card',
   data: {
-    input: '# hello',
-    preview: false,
+    input: settings.get(window.location.hash + ".text") || '# hello',
+    editable: false
   },
   computed: {
     compiledMarkdown: function () {
@@ -14,16 +18,18 @@ new Vue({
   },
   methods: {
     update: _.debounce(function (e) {
+      settings.set(window.location.hash + ".text", e.target.value)
       this.input = e.target.value
     }, 300),
-    onPreview: function(){
-      this.preview = !this.preview;
+    onEdit: function(){
+      this.editable = true;
     },
     onSave: function(){
-
+      this.editable = false;
     },
-    onCancel: function(){
-
+    onClose: function(){
+      remote.getCurrentWindow().close()
     }
   }
 })
+

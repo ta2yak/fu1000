@@ -7,34 +7,32 @@
     <link rel="stylesheet" type="text/css" href="css/index.css">
   </head>
   <body>
-    <div class="ui grid">
+    <div class="ui grid fullheight">
       <div id="card" class="ui card sixteen wide column">
         <div class="content">
+          <i id="closeButton" class="right floated close icon"> </i>
+          <i class="right floated setting icon"> </i>
+          <div class="header draggable">&nbsp;</div>
           <div class="description">
             <div class="ui form">
               <div class="field">
-                <textarea v-if="!preview" :value="input" @input="update"></textarea>
-                <div  v-if="preview" v-html="compiledMarkdown"></div>
+                <textarea v-if="editable" :value="input" @input="update"></textarea>
+                <div v-if="!editable" v-html="compiledMarkdown"></div>
               </div>
             </div>
           </div>
         </div>
         <div class="extra content">
           <span class="right floated star">
-            <button  v-on:click="onPreview" class="ui button">Preview</button>
-            <button  v-on:click="onSave" class="ui button">Save</button>
-            <button  v-on:click="onCancel" class="ui button">Cancel</button>
+            <button v-if="editable" v-on:click="onSave" class="ui button">Save</button>
           </span>
         </div>
       </div>
 
     </div>
 
-  </body>
-
-  <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
-  <script src="../semantic/dist/semantic.min.js"></script>    
   <script src="https://unpkg.com/vue"></script>
   <script src="js/index.js"></script>
 
+  </body>
 </html>
