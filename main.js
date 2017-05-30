@@ -50,7 +50,7 @@ app.on('ready', () => {
   windowManager.setDefaultSetup(
     {
       width: 340, 
-      height: 295, 
+      height: 332, 
       frame: false, 
       resizable: false,
       maxWidth: width, 

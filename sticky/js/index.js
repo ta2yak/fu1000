@@ -8,6 +8,7 @@ const _ = require("lodash")
 const vue = new Vue({
   el: '#card',
   data: {
+    title: settings.get(window.location.hash + ".title") || '',
     input: settings.get(window.location.hash + ".text") || '# hello',
     editable: false
   },
@@ -17,7 +18,11 @@ const vue = new Vue({
     }
   },
   methods: {
-    update: _.debounce(function (e) {
+    updateTitle: _.debounce(function (e) {
+      settings.set(window.location.hash + ".title", e.target.value)
+      this.title = e.target.value
+    }, 300),
+    updateText: _.debounce(function (e) {
       settings.set(window.location.hash + ".text", e.target.value)
       this.input = e.target.value
     }, 300),
