@@ -33,7 +33,15 @@ const vue = new Vue({
       this.editable = false;
     },
     onClose: function(){
-      remote.getCurrentWindow().close()
+      if (confirm("このカードを削除してもよろしいですか？")) {
+        // 永続化データから削除する
+        let windows = settings.get('windows')
+        let key = window.location.hash
+        _.remove(windows, function(w) { return ("#" + w.id) === key })
+        settings.set('windows', windows)
+        settings.delete(window.location.hash)
+        remote.getCurrentWindow().close()
+      }
     }
   }
 })

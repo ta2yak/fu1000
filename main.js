@@ -69,7 +69,7 @@ app.on('ready', () => {
   // **************************************************
   tray = new Tray(__dirname + "/public/images/icon.png");
   contextMenu = Menu.buildFromTemplate([
-      { label: "新しい付箋を作成する", 
+      { label: "新しいカードを作成する", 
         click: function () {
           createSticky();
         } 
