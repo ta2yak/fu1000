@@ -3,7 +3,29 @@ const settings = require('electron-settings');
 const marked = require("marked")
 const _ = require("lodash")
 
+let persistWindowSize = function(){
+  let sizes = remote.getCurrentWindow().getSize()
+  settings.set(window.location.hash + ".width", sizes[0])
+  settings.set(window.location.hash + ".height", sizes[1])
+}
 
+let persistWindowPosition = function(){
+  let positions = remote.getCurrentWindow().getPosition()
+  settings.set(window.location.hash + ".x", positions[0])
+  settings.set(window.location.hash + ".y", positions[1])
+}
+
+let restoreWindowSize = function(){
+  let width = settings.get(window.location.hash + ".width") || 600
+  let height = settings.get(window.location.hash + ".height") || 332
+  remote.getCurrentWindow().setSize(width, height)
+}
+
+let restoreWindowPosition = function(){
+  let x = settings.get(window.location.hash + ".x") || 0
+  let y = settings.get(window.location.hash + ".y") || 2
+  remote.getCurrentWindow().setPosition(x, y)
+}
 
 const vue = new Vue({
   el: '#card',
@@ -19,18 +41,23 @@ const vue = new Vue({
   },
   methods: {
     updateTitle: _.debounce(function (e) {
-      settings.set(window.location.hash + ".title", e.target.value)
       this.title = e.target.value
     }, 300),
     updateText: _.debounce(function (e) {
-      settings.set(window.location.hash + ".text", e.target.value)
       this.input = e.target.value
     }, 300),
     onEdit: function(){
-      this.editable = true;
+      persistWindowSize()
+      persistWindowPosition()
+
+      this.editable = true
     },
     onSave: function(){
-      this.editable = false;
+      settings.set(window.location.hash + ".title", this.title)
+      settings.set(window.location.hash + ".text", this.input)
+      this.editable = false
+      restoreWindowSize()
+      restoreWindowPosition()
     },
     onClose: function(){
       if (confirm("このカードを削除してもよろしいですか？")) {
@@ -43,6 +70,17 @@ const vue = new Vue({
         remote.getCurrentWindow().close()
       }
     }
+  },
+  mounted: function(){
+    restoreWindowSize()
+    restoreWindowPosition()
   }
 })
 
+remote.getCurrentWindow().on('resize', function (e) {
+  persistWindowSize()
+})
+
+remote.getCurrentWindow().on('move', function (e) {
+  persistWindowPosition()
+})

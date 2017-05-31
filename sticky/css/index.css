@@ -1,5 +1,5 @@
 /*:root {
-    --electron-height-margin: 40px;
+    --electron-resizable-margin: 3px;
 }*/
 
 html, body {
@@ -8,15 +8,6 @@ html, body {
     margin: 0;
     padding: 0;
 }
-
-/*.fullheight {
-    height: calc(100% - (var(--electron-height-margin)));
-}
-
-.fullheight .card {
-    height: calc(100% - (var(--electron-height-margin)));
-}
-*/
 .draggable {
     -webkit-app-region: drag;
     cursor: pointer;
@@ -26,3 +17,6 @@ html, body {
     margin-top: 25px !important;
 }
 
+#card {
+    box-shadow: 0 0 0 0 !important; /* Semantic-UIのカードに対する影は不要 */
+}

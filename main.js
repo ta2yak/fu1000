@@ -52,7 +52,7 @@ app.on('ready', () => {
       width: 340, 
       height: 332, 
       frame: false, 
-      resizable: false,
+      resizable: true,
       maxWidth: width, 
       maxHeight: height
     });
