@@ -1,10 +1,23 @@
 {
   "name": "sticky",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "",
   "main": "main.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "electron .",
+    "test": "echo \"Warning: no test specified\"",
+    "clean": "rm -rf ./dist",
+    "clean:osx": "rm -rf ./dist/osx",
+    "clean:win": "rm -rf ./dist/win",
+    "pack": "npm run pack:osx && npm run build:win",
+    "pack:osx": "npm run clean:osx && electron-packager . \"Sticky\" --out=dist/osx --platform=darwin --arch=x64 --icon=assets/osx/icon.icns --ignore=\"dist|assets\"",
+    "pack:win": "npm run clean:win && electron-packager . \"Sticky\" --out=dist/win --platform=win32 --arch=ia32 --icon=assets/win/icon.ico --ignore=\"dist|assets\"",
+    "build": "npm run build:osx && npm run build:win",
+    "build:osx": "npm run pack:osx && electron-builder \"dist/osx/Sticky-darwin-x64/Sticky.app\" --platform=osx --out=\"dist/osx\" --config=builder.json",
+    "build:win": "npm run pack:win && electron-builder \"dist/win/Sticky-win32-ia32\" --platform=win --out=\"dist/win\" --config=builder.json",
+    "archive": "npm run archive:osx && npm run archive:win",
+    "archive:osx": "npm run build:osx && zip -j \"dist/osx/Sticky-osx.zip\" \"dist/osx/Sticky.dmg\"",
+    "archive:win": "npm run build:win && zip -j \"dist/win/Sticky-win.zip\" \"dist/win/Sticky Setup.exe\""
   },
   "repository": {
     "type": "git",
@@ -25,6 +38,9 @@
     "uuid": "^3.0.1"
   },
   "devDependencies": {
-    "electron": "^1.6.10"
+    "electron": "^1.6.10",
+    "electron-builder": "^18.3.0",
+    "electron-packager": "^8.7.0",
+    "electron-prebuilt": "^1.4.13"
   }
 }
