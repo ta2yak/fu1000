@@ -7,8 +7,12 @@
     <link rel="stylesheet" type="text/css" href="css/index.css">
   </head>
   <body>
-    <div class="ui grid">
-      <div id="card" class="ui card sixteen wide column">
+    <div id="card" class="ui grid">
+      <div v-if="!loaded" class="ui active dimmer">
+        <div class="ui loader"></div>
+      </div>
+
+      <div v-if="loaded" class="ui card sixteen wide column">
         <div class="content">
           <!-- ヘッダー部 -->
 

@@ -1,27 +1,27 @@
-const electron = require('electron');
-const windowManager = require('electron-window-manager');
-const settings = require('electron-settings');
-const uuid = require('uuid');
-const _ = require('lodash');
-const {app, BrowserWindow, Menu, Tray} = electron;
+const electron = require('electron')
+const windowManager = require('electron-window-manager')
+const settings = require('electron-settings')
+const uuid = require('uuid')
+const _ = require('lodash')
+const {app, BrowserWindow, Menu, Tray} = electron
 
-let mainWindow = null;
-let tray = null;
-let contextMenu = null;
+let mainWindow = null
+let tray = null
+let contextMenu = null
 
 // 新規の付箋を生成する
 let createSticky = function(){
-  let id = uuid.v4();
-  windowManager.open(id, 'Sticky Page', "file://" + __dirname + "/sticky/index.html" + "#" + id); 
+  let id = uuid.v4()
+  windowManager.open(id, 'Sticky Page', "file://" + __dirname + "/sticky/index.html" + "#" + id) 
 
-  let windows = settings.get('windows') || new Array();
-  windows.push({id: id});
-  settings.set('windows', windows);
+  let windows = settings.get('windows') || new Array()
+  windows.push({id: id})
+  settings.set('windows', windows)
 }
 
 // 作成済みの付箋を生成する
 let resumeSticky = function(id){
-  windowManager.open(id, 'Sticky Page', "file://" + __dirname + "/sticky/index.html" + "#" + id); 
+  windowManager.open(id, 'Sticky Page', "file://" + __dirname + "/sticky/index.html" + "#" + id) 
 }
 
 app.on('ready', () => {
@@ -38,52 +38,51 @@ app.on('ready', () => {
       show: false, 
       "skip-taskbar": true
     }
-  );
+  )
   mainWindow.on('closed', function() {
-    mainWindow = null;
-  });
+    mainWindow = null
+  })
 
   // **************************************************
   // ウィンドウマネージャーの設定
   // **************************************************
-  const {width, height} = electron.screen.getPrimaryDisplay().workAreaSize;
+  const {width, height} = electron.screen.getPrimaryDisplay().workAreaSize
   windowManager.setDefaultSetup(
     {
-      width: 340, 
-      height: 332, 
+      width: 400, 
+      height: 400, 
       frame: false, 
       resizable: true,
+      "skip-taskbar": true,
+      show: false,
       maxWidth: width, 
       maxHeight: height
-    });
+    })
 
   // 画面一覧を取得
-  let windows = settings.get('windows') || new Array();
+  let windows = settings.get('windows') || new Array()
   // 画面一覧からウィンドウを復元
   _.each(windows, function(window){
-    resumeSticky(window.id);
-  });
+    resumeSticky(window.id)
+  })
 
   // **************************************************
   // タスクトレイの設定
   // **************************************************
-  tray = new Tray(__dirname + "/public/images/icon.png");
+  tray = new Tray(__dirname + "/public/images/icon.png")
   contextMenu = Menu.buildFromTemplate([
       { label: "新しいカードを作成する", 
         click: function () {
-          createSticky();
+          createSticky()
         } 
       },
       { label: "終了", 
         click: function () { 
-          mainWindow.close(); 
+          mainWindow.close() 
         } 
       }
-  ]);
-  tray.setContextMenu(contextMenu);
-  tray.setToolTip(app.getName());
-  tray.on("clicked", function () {
-      tray.popUpContextMenu(contextMenu);
-  });
+  ])
+  tray.setContextMenu(contextMenu)
+  tray.setToolTip(app.getName())
   
-});
+})
