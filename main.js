@@ -3,6 +3,7 @@ const windowManager = require('electron-window-manager')
 const settings = require('electron-settings')
 const uuid = require('uuid')
 const _ = require('lodash')
+const path = require('path')
 const {app, BrowserWindow, Menu, Tray} = electron
 
 let mainWindow = null
@@ -10,7 +11,7 @@ let tray = null
 let contextMenu = null
 
 // 新規の付箋を生成する
-let createSticky = function(){
+let createSticky = () => {
   let id = uuid.v4()
   windowManager.open(id, 'Sticky Page', "file://" + __dirname + "/sticky/index.html" + "#" + id) 
 
@@ -20,9 +21,13 @@ let createSticky = function(){
 }
 
 // 作成済みの付箋を生成する
-let resumeSticky = function(id){
+let resumeSticky = (id) => {
   windowManager.open(id, 'Sticky Page', "file://" + __dirname + "/sticky/index.html" + "#" + id) 
 }
+
+app.on('window-all-closed', () => {
+  if(process.platform != 'darwin') app.quit()
+})
 
 app.on('ready', () => {
 
@@ -39,8 +44,10 @@ app.on('ready', () => {
       "skip-taskbar": true
     }
   )
-  mainWindow.on('closed', function() {
+  mainWindow.on('closed', () => {
     mainWindow = null
+    tray = null
+    contextMenu = null
   })
 
   // **************************************************
@@ -56,29 +63,30 @@ app.on('ready', () => {
       "skip-taskbar": true,
       show: false,
       maxWidth: width, 
-      maxHeight: height
+      maxHeight: height,
+      
     })
 
   // 画面一覧を取得
   let windows = settings.get('windows') || new Array()
   // 画面一覧からウィンドウを復元
-  _.each(windows, function(window){
+  _.each(windows, (window) => {
     resumeSticky(window.id)
   })
 
   // **************************************************
   // タスクトレイの設定
   // **************************************************
-  tray = new Tray(__dirname + "/public/images/icon.png")
+  tray = new Tray(path.join(__dirname, 'assets', 'images', "icon.png"))
   contextMenu = Menu.buildFromTemplate([
       { label: "新しいカードを作成する", 
-        click: function () {
+        click: () => {
           createSticky()
         } 
       },
       { label: "終了", 
-        click: function () { 
-          mainWindow.close() 
+        click: () => { 
+          app.quit()
         } 
       }
   ])

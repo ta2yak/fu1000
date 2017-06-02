@@ -17,6 +17,6 @@ html, body {
     margin-top: 25px !important;
 }
 
-#card {
+.card {
     box-shadow: 0 0 0 0 !important; /* Semantic-UIのカードに対する影は不要 */
 }

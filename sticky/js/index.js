@@ -80,6 +80,7 @@ const vue = new Vue({
     restoreWindowSize()
     restoreWindowPosition()
     this.loaded = true
+    remote.getCurrentWindow().webContents.openDevTools()
   }
 })
 
