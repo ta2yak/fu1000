@@ -3,6 +3,29 @@ const settings = require('electron-settings');
 const marked = require("marked")
 const _ = require("lodash")
 
+let renderer = new marked.Renderer()
+renderer.listitem = (text) => {
+  if (/^\s*\[[x ]\]\s*/.test(text)) {
+    text = text
+      .replace(/^\s*\[ \]\s*/, '<i class="square outline icon"></i> ')
+      .replace(/^\s*\[x\]\s*/, '<i class="checkmark box icon"></i> ')
+    return '<li style="list-style: none">' + text + '</li>';
+  } else {
+    return '<li>' + text + '</li>';
+  }
+}
+
+marked.setOptions({
+  renderer: renderer,
+  gfm: true,
+  tables: true,
+  breaks: true,
+  pedantic: false,
+  sanitize: true,
+  smartLists: true,
+  smartypants: false
+})
+
 /* 画面サイズを保存する */
 let persistWindowSize = function(){
   let sizes = remote.getCurrentWindow().getSize()
@@ -80,7 +103,7 @@ const vue = new Vue({
     restoreWindowSize()
     restoreWindowPosition()
     this.loaded = true
-    remote.getCurrentWindow().webContents.openDevTools()
+    //remote.getCurrentWindow().webContents.openDevTools()
   }
 })
 
