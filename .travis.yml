@@ -11,9 +11,7 @@ before_install:
 - nvm use --delete-prefix $NODE_VERSION
 - node --version
 install:
-- npm install
-- npm install -g electron-builder
-- npm install -g electron-packager
+- npm install --dev
 #before_script:
 script:
 - npm test
