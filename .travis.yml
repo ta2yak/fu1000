@@ -1,35 +1,35 @@
 language: objective-c
-cache: 
+cache:
   directories:
-    - node_modules
+  - node_modules
 env:
-  - NODE_VERSION="6.10.3"
+- NODE_VERSION="6.10.3"
 before_install:
-  - git clone https://github.com/creationix/nvm.git /tmp/.nvm
-  - source /tmp/.nvm/nvm.sh
-  - nvm install $NODE_VERSION
-  - nvm use --delete-prefix $NODE_VERSION
-  - node --version
+- git clone https://github.com/creationix/nvm.git /tmp/.nvm
+- source /tmp/.nvm/nvm.sh
+- nvm install $NODE_VERSION
+- nvm use --delete-prefix $NODE_VERSION
+- node --version
 install:
-  - npm install
+- npm install
 #before_script:
 script:
-  - npm test
+- npm test
 before_deploy:
-  - brew update
-  - brew install wine
-  - wine --version
-  - brew install makensis
-  - npm install -g electron-builder
-  - npm install -g electron-packager
-  - npm run archive
+- brew update
+- brew install wine
+- wine --version
+- brew install makensis
+- npm install -g electron-builder
+- npm install -g electron-packager
+- npm run archive
 deploy:
   provider: releases
   api_key:
-    secure: XXXXXX
+    secure: GKoFyQraKLkolZGl+uNVEUq/I0jT+Pa4f+9XIoSRyC7c4KydjCED/yebe43eOmwAsve6y6BioyCV6mRPiQKVrbu3LW//F9r9WBf1nZ04neOLdtev9wTw0prnB7u41k21Z2YTJJuy5EvWep+huelK/M73+gOAvnoClHYucCXpqLldGr2aGDzkYKHo5C0TaLPtMdeJoqdOsafjfiveyRG5PBffQGfPsn3nDii/OfvWArscmvJiU3rm6PFvYuqzukmRgqGsfTJ5qVlm9zSKJdN3HE+nMOVv26Cr0Maqs9N1s0XhDnFvfsscuCt3DPFEssU6cKbZOeqgkVD+TQL8d0dXEN8d+GiNrdePk/wE2IRKhEi2Li5LO1D8KOyYRBExlDhuOKmZ16ZU1RUDiL1VSPN8nzcajl4uafnNsmMXIieVxHhLSUoXuqzyHQHJNa9m2vc4hSDwyKdGrlM/6RbpHh9WAIEOctZ+qIN9YRimFmm/KPw54urzicBbf2pnSg7Fn3F0aNmAtmx2d3EQQGPEiYEQKMv9aFuCga4D19ElS/QcRldMjRo/0Ub7JaHkTd2TtKBXfktSEzUtrxQYABkykc5wlb6mydbhF2WtgsYEk8V7yc0ycN/mj9RcVIHRtmVzcFhJ6x5HWL6wPjZuIqjJcrPKdhPinlXqyCA/MgV58B6VPDs=
   file:
-    - dist/win/Sticky-win.zip
-    - dist/osx/Sticky-osx.zip
+    - publish/win/Sticky-win.zip
+    - publish/osx/Sticky-osx.zip
   skip_cleanup: true
   on:
     repo: ta2yak/sticky
