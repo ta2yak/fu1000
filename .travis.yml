@@ -12,6 +12,8 @@ before_install:
 - node --version
 install:
 - npm install
+- npm install -g electron-builder
+- npm install -g electron-packager
 #before_script:
 script:
 - npm test
@@ -20,8 +22,6 @@ before_deploy:
 - brew install wine
 - wine --version
 - brew install makensis
-- npm install -g electron-builder
-- npm install -g electron-packager
 - npm run archive
 deploy:
   provider: releases
