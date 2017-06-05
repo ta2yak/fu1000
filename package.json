@@ -9,15 +9,12 @@
     "clean": "rm -rf ./publish",
     "clean:osx": "rm -rf ./publish/osx",
     "clean:win": "rm -rf ./publish/win",
-    "pack": "npm run pack:osx && npm run build:win",
+    "pack": "npm run pack:osx && npm run pack:win",
     "pack:osx": "npm run clean:osx && electron-packager . \"Sticky\" --out=publish/osx --platform=darwin --arch=x64 --icon=assets/osx/icon.icns --ignore=\"publish\"",
     "pack:win": "npm run clean:win && electron-packager . \"Sticky\" --out=publish/win --platform=win32 --arch=ia32 --icon=assets/win/icon.ico --ignore=\"publish\"",
-    "build": "npm run build:osx && npm run build:win",
-    "build:osx": "npm run pack:osx && electron-builder \"publish/osx/Sticky-darwin-x64/Sticky.app\" --platform=osx --out=\"publish/osx\" --config=builder.json",
-    "build:win": "npm run pack:win && electron-builder \"publish/win/Sticky-win32-ia32\" --platform=win --out=\"publish/win\" --config=builder.json",
     "archive": "npm run archive:osx && npm run archive:win",
-    "archive:osx": "npm run build:osx && zip -j \"publish/osx/Sticky-osx.zip\" \"publish/osx/Sticky.dmg\"",
-    "archive:win": "npm run build:win && zip -j \"publish/win/Sticky-win.zip\" \"publish/win/Sticky Setup.exe\""
+    "archive:osx": "npm run pack:osx && cd \"publish/osx/\" && zip -r \"Sticky-osx.zip\" \"Sticky-darwin-x64\"",
+    "archive:win": "npm run pack:win && cd \"publish/win/\" && zip -r \"Sticky-win-x86.zip\" \"Sticky-win32-ia32\""
   },
   "repository": {
     "type": "git",
@@ -40,8 +37,13 @@
   },
   "devDependencies": {
     "electron": "^1.6.10",
-    "electron-builder": "^18.3.0",
     "electron-packager": "^8.7.0",
     "electron-prebuilt": "^1.4.13"
+  },
+  "build": {
+    "appId": "your.id",
+    "mac": {
+      "category": "your.app.category.type"
+    }
   }
 }
