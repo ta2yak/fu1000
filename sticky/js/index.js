@@ -54,6 +54,11 @@ let restoreWindowPosition = function(){
   remote.getCurrentWindow().setPosition(x, y)
 }
 
+/* タイトルを設定する */
+let setTitle = function(title){
+  remote.getCurrentWindow().setTitle(title || "名称を入力してください")
+}
+
 const vue = new Vue({
   el: '#card',
   data: {
@@ -86,7 +91,7 @@ const vue = new Vue({
       this.editable = false
       restoreWindowSize()
       restoreWindowPosition()
-      remote.getCurrentWindow().setTitle(this.title)
+      setTitle(this.title)
     },
     onClose: function(){
       if (confirm("このカードを削除してもよろしいですか？\n※ 一度削除すると復元できません")) {
@@ -103,7 +108,7 @@ const vue = new Vue({
   mounted: function(){
     restoreWindowSize()
     restoreWindowPosition()
-    remote.getCurrentWindow().setTitle(this.title)
+    setTitle(this.title)
     this.loaded = true
     //remote.getCurrentWindow().webContents.openDevTools()
   }
