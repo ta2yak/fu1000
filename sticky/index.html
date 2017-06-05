@@ -2,59 +2,81 @@
 <html>
   <head>
     <meta charset="UTF-8">
-    <title>Hello World!</title>
+    <title>Sticky Card</title>
     <link rel="stylesheet" type="text/css" href="../semantic/dist/semantic.min.css">
     <link rel="stylesheet" type="text/css" href="css/index.css">
   </head>
   <body>
     <div id="card" class="ui grid">
-      <div v-if="!loaded" class="ui active dimmer">
-        <div class="ui loader"></div>
-      </div>
 
-      <div v-if="loaded" class="ui card sixteen wide column">
-        <div class="content">
-          <!-- ヘッダー部 -->
+      <template v-if="!loaded">
+        <div class="ui active dimmer">
+          <div class="ui loader"></div>
+        </div>
+      </template>
+      <template v-else>
+        <div class="ui card sixteen wide column">
 
           <!-- 表示中の表示 -->
-          <div v-if="!editable" class="ui label teal large draggable">
-            <i class="hashtag icon"></i> {{ title }}
-          </div>
-          <div v-if="!editable" class="right floated ui icon buttons compact">
-            <button v-on:click="onEdit" class="ui button compact">
-              <i class="setting icon">&nbsp;</i>
-            </button>
-            <button v-on:click="onClose" class="ui button compact">
-              <i class="close icon">&nbsp;</i>
-            </button>
-          </div>
+          <template v-if="!editable">
+            <div class="content">
+              <!-- ヘッダー部 -->
 
-          <!-- 編集中の表示 -->
-          <div v-if="editable" class="ui fluid labeled input">
-            <div class="ui label">Title</div>
-            <input type="text" placeholder="Task A" :value="title" @input="updateTitle"/>
-          </div>
+              <div class="ui label teal large draggable">
+                <i class="hashtag icon"></i> {{ title }}
+              </div>
+              <div class="right floated ui icon buttons compact">
+                <button v-on:click="onEdit" class="ui button compact">
+                  <i class="setting icon">&nbsp;</i>
+                </button>
+                <button v-on:click="onClose" class="ui button compact">
+                  <i class="close icon">&nbsp;</i>
+                </button>
+              </div>
 
-
-          <!-- コンテンツ部 -->
-          <div class="description">
-            <div class="ui form">
-              <div class="field">
-                <textarea v-if="editable" :value="input" @input="updateText"></textarea>
-                <div v-if="!editable" v-html="compiledMarkdown"></div>
+              <!-- コンテンツ部 -->
+              <div class="description">
+                <div class="ui form">
+                  <div class="field">
+                    <div v-html="compiledMarkdown"></div>
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
-        </div>
 
-        <!-- アクションエリア -->
-        <div class="extra content" v-if="editable">
-          <span class="right floated star">
-            <button v-on:click="onSave" class="ui button teal">Save</button>
-          </span>
-        </div>
+          </template>
+          <!-- 編集中の表示 -->
+          <template v-else>
+            <div class="content">
+              <!-- ヘッダー部 -->
 
-      </div>
+              <div v-if="editable" class="ui fluid labeled input">
+                <div class="ui label">名称</div>
+                <input type="text" placeholder="Task A" :value="title" @input="updateTitle"/>
+              </div>
+
+
+              <!-- コンテンツ部 -->
+              <div class="description">
+                <div class="ui form">
+                  <div class="field">
+                    <textarea :value="input" @input="updateText" placeholder="内容"></textarea>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- アクションエリア -->
+            <div class="extra content">
+              <span class="right floated star">
+                <button v-on:click="onSave" class="ui button teal">Save</button>
+              </span>
+            </div>
+          </template>
+
+
+        </div>
+      </template>
 
     </div>
 

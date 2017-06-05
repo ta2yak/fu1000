@@ -86,9 +86,10 @@ const vue = new Vue({
       this.editable = false
       restoreWindowSize()
       restoreWindowPosition()
+      remote.getCurrentWindow().setTitle(this.title)
     },
     onClose: function(){
-      if (confirm("このカードを削除してもよろしいですか？")) {
+      if (confirm("このカードを削除してもよろしいですか？\n※ 一度削除すると復元できません")) {
         // 永続化データから削除する
         let windows = settings.get('windows')
         let key = window.location.hash
@@ -102,6 +103,7 @@ const vue = new Vue({
   mounted: function(){
     restoreWindowSize()
     restoreWindowPosition()
+    remote.getCurrentWindow().setTitle(this.title)
     this.loaded = true
     //remote.getCurrentWindow().webContents.openDevTools()
   }

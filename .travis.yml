@@ -20,6 +20,8 @@ before_deploy:
   - brew install wine
   - wine --version
   - brew install makensis
+  - npm install -g electron-builder
+  - npm install -g electron-packager
   - npm run archive
 deploy:
   provider: releases
