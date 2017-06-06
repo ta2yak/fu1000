@@ -41,9 +41,9 @@
     "electron-prebuilt": "^1.4.13"
   },
   "build": {
-    "appId": "your.id",
+    "appId": "com.github.ta2yak.sticky",
     "mac": {
-      "category": "your.app.category.type"
+      "category": ""
     }
   }
 }
