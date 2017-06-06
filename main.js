@@ -4,7 +4,7 @@ const settings = require('electron-settings')
 const uuid = require('uuid')
 const _ = require('lodash')
 const path = require('path')
-const {app, BrowserWindow, Menu, Tray} = electron
+const {app, BrowserWindow, Menu, Tray, globalShortcut} = electron
 
 let mainWindow = null
 let tray = null
@@ -23,6 +23,25 @@ let createSticky = () => {
 // 作成済みの付箋を生成する
 let resumeSticky = (id) => {
   windowManager.open(id, 'Sticky Page', "file://" + __dirname + "/sticky/index.html" + "#" + id) 
+}
+
+// 全てのウィンドウを前面に表示する
+let allToFront = () => {
+  let windows = settings.get('windows') || new Array()
+  _.each(windows, (window) => {
+    let win = windowManager.get(window.id)
+    win.restore()
+    win.focus()
+  })
+}
+
+// 全てのウィンドウを最小化する
+let allToMinimize = () => {
+  let windows = settings.get('windows') || new Array()
+  _.each(windows, (window) => {
+    let win = windowManager.get(window.id)
+    win.minimize()
+  })
 }
 
 app.on('window-all-closed', () => {
@@ -84,6 +103,16 @@ app.on('ready', () => {
           createSticky()
         } 
       },
+      { label: "最前面に表示する", 
+        click: () => {
+          allToFront()
+        } 
+      },
+      { label: "全てを隠す", 
+        click: () => {
+          allToMinimize()
+        } 
+      },
       { label: "終了", 
         click: () => { 
           app.quit()
@@ -113,4 +142,20 @@ app.on('ready', () => {
   
   Menu.setApplicationMenu(Menu.buildFromTemplate(template))
 
+  globalShortcut.register('Shift+CmdOrCtrl+N', () => {
+    createSticky()
+  })
+
+  globalShortcut.register('Shift+CmdOrCtrl+D', () => {
+    allToMinimize()
+  })
+
+  globalShortcut.register('Shift+CmdOrCtrl+F', () => {
+    allToFront()
+  })
+})
+
+app.on('will-quit', () => {
+  // Unregister all shortcuts.
+  globalShortcut.unregisterAll()
 })
