@@ -2,6 +2,8 @@ const remote = require("electron").remote
 const settings = require('electron-settings');
 const marked = require("marked")
 const _ = require("lodash")
+const log = require('electron-log')
+
 
 let renderer = new marked.Renderer()
 renderer.listitem = (text) => {
@@ -86,21 +88,26 @@ const vue = new Vue({
       this.editable = true
     },
     onSave: function(){
+      log.info("Saving form ...")
       settings.set(window.location.hash + ".title", this.title)
       settings.set(window.location.hash + ".text", this.input)
       this.editable = false
       restoreWindowSize()
       restoreWindowPosition()
       setTitle(this.title)
+      log.info("Saved form !!")
     },
     onClose: function(){
       if (confirm("このカードを削除してもよろしいですか？\n※ 一度削除すると復元できません")) {
+        log.info("Deleting card ...")
         // 永続化データから削除する
         let windows = settings.get('windows')
         let key = window.location.hash
         _.remove(windows, function(w) { return ("#" + w.id) === key })
         settings.set('windows', windows)
         settings.delete(window.location.hash)
+        log.info("Deleted card !!")
+
         remote.getCurrentWindow().close()
       }
     }

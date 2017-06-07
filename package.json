@@ -10,8 +10,11 @@
     "clean:osx": "rm -rf ./publish/osx",
     "clean:win": "rm -rf ./publish/win",
     "pack": "npm run pack:osx && npm run pack:win",
-    "pack:osx": "npm run clean:osx && electron-packager . \"Sticky\" --out=publish/osx --platform=darwin --arch=x64 --icon=assets/osx/icon.icns --ignore=\"publish\"",
-    "pack:win": "npm run clean:win && electron-packager . \"Sticky\" --out=publish/win --platform=win32 --arch=ia32 --icon=assets/win/icon.ico --ignore=\"publish\"",
+    "pack:osx": "electron-packager . \"Sticky\" --out=publish/osx --platform=darwin --arch=x64 --icon=assets/osx/icon.icns --ignore=\"publish\"",
+    "pack:win": "electron-packager . \"Sticky\" --out=publish/win --platform=win32 --arch=ia32 --icon=assets/win/icon.ico --ignore=\"publish\"",
+    "repack": "npm run repack:osx && npm run repack:win",
+    "repack:osx": "npm run clean:osx && npm run repack:osx",
+    "repack:win": "npm run clean:win && npm run repack:win",
     "archive": "npm run archive:osx && npm run archive:win",
     "archive:osx": "npm run pack:osx && cd \"publish/osx/\" && zip -r \"Sticky-osx.zip\" \"Sticky-darwin-x64\"",
     "archive:win": "npm run pack:win && cd \"publish/win/\" && zip -r \"Sticky-win-x86.zip\" \"Sticky-win32-ia32\""
@@ -27,6 +30,7 @@
   },
   "homepage": "https://github.com/ta2yak/sticky#readme",
   "dependencies": {
+    "electron-log": "^2.2.6",
     "electron-settings": "^3.0.14",
     "electron-window-manager": "^1.0.4",
     "lodash": "^4.17.4",
