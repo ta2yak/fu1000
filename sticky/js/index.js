@@ -2,7 +2,21 @@ const remote = require("electron").remote
 const settings = require('electron-settings');
 const marked = require("marked")
 const _ = require("lodash")
-const log = require('electron-log')
+const winston = require('winston')
+require('winston-papertrail').Papertrail
+
+let mainWindow = null
+let tray = null
+let contextMenu = null
+let logger = new winston.Logger({
+  transports: [
+    new winston.transports.Papertrail({
+      level: 'info',
+      host: 'logs5.papertrailapp.com',
+      port: 19352
+    })
+  ]
+})
 
 
 let renderer = new marked.Renderer()
@@ -88,25 +102,25 @@ const vue = new Vue({
       this.editable = true
     },
     onSave: function(){
-      log.info("Saving form ...")
+      logger.info("Saving form ...")
       settings.set(window.location.hash + ".title", this.title)
       settings.set(window.location.hash + ".text", this.input)
       this.editable = false
       restoreWindowSize()
       restoreWindowPosition()
       setTitle(this.title)
-      log.info("Saved form !!")
+      logger.info("Saved form !!")
     },
     onClose: function(){
       if (confirm("このカードを削除してもよろしいですか？\n※ 一度削除すると復元できません")) {
-        log.info("Deleting card ...")
+        logger.info("Deleting card ...")
         // 永続化データから削除する
         let windows = settings.get('windows')
         let key = window.location.hash
         _.remove(windows, function(w) { return ("#" + w.id) === key })
         settings.set('windows', windows)
         settings.delete(window.location.hash)
-        log.info("Deleted card !!")
+        logger.info("Deleted card !!")
 
         remote.getCurrentWindow().close()
       }
