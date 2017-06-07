@@ -8,6 +8,9 @@ const {app, BrowserWindow, Menu, Tray, globalShortcut} = electron
 const winston = require('winston')
 require('winston-loggly-bulk')
 
+// 保存内容を削除する場合に利用する
+//settings.deleteAll()
+
 let mainWindow = null
 let tray = null
 let contextMenu = null
@@ -58,6 +61,18 @@ let allToMinimize = () => {
   winston.log('info', "Setting Changed!! Screen To Min")
 }
 
+// 履歴参照画面を表示する
+let showHistory = () => {
+  windowManager.open("history", 'Sticky History', "file://" + __dirname + "/sticky/history.html", false, {
+      width: 290, 
+      height: 400, 
+      frame: false, 
+      resizable: false,
+      "skip-taskbar": true,
+      show: false,
+  }) 
+}
+
 app.on('window-all-closed', () => {
   winston.log('info', "Close windows")
   if(process.platform != 'darwin') app.quit()
@@ -100,7 +115,7 @@ app.on('ready', () => {
       show: false,
       maxWidth: width, 
       maxHeight: height,
-      
+      //showDevTools: true,
     })
 
   winston.log('info', "Resume Cards ...")
@@ -123,6 +138,11 @@ app.on('ready', () => {
       { label: "新しいカードを作成する", 
         click: () => {
           createSticky()
+        } 
+      },
+      { label: "過去の履歴を参照する", 
+        click: () => {
+          showHistory()
         } 
       },
       { label: "最前面に表示する", 
