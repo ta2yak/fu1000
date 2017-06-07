@@ -6,31 +6,28 @@ const _ = require('lodash')
 const path = require('path')
 const {app, BrowserWindow, Menu, Tray, globalShortcut} = electron
 const winston = require('winston')
-require('winston-papertrail').Papertrail
+require('winston-loggly-bulk')
 
 let mainWindow = null
 let tray = null
 let contextMenu = null
-let logger = new winston.Logger({
-  transports: [
-    new winston.transports.Papertrail({
-      level: 'info',
-      host: 'logs5.papertrailapp.com',
-      port: 19352
-    })
-  ]
+winston.add(winston.transports.Loggly, {
+    token: "41feb295-2f15-4838-8d59-e65a7ec9b5e4",
+    subdomain: "ta2yak",
+    tags: ["Winston-NodeJS", "Sticky-Main"],
+    json:true
 })
 
 // 新規のカードを生成する
 let createSticky = () => {
-  logger.info("Create New Card ...")
+  winston.log('info', "Create New Card ...")
   let id = uuid.v4()
   windowManager.open(id, 'Sticky Page', "file://" + __dirname + "/sticky/index.html" + "#" + id) 
 
   let windows = settings.get('windows') || new Array()
   windows.push({id: id})
   settings.set('windows', windows)
-  logger.info("Created New Card !! Total Card Count：" + windows.length)
+  winston.log('info', "Created New Card !! Total Card Count：" + windows.length)
 }
 
 // 作成済みのカードを生成する
@@ -40,35 +37,35 @@ let resumeSticky = (id) => {
 
 // 全てのウィンドウを前面に表示する
 let allToFront = () => {
-  logger.info("Setting Changing... Screen To Top")
+  winston.log('info', "Setting Changing... Screen To Top")
   let windows = settings.get('windows') || new Array()
   _.each(windows, (window) => {
     let win = windowManager.get(window.id)
     win.restore()
     win.focus()
   })
-  logger.info("Setting Changed!! Screen To Top")
+  winston.log('info', "Setting Changed!! Screen To Top")
 }
 
 // 全てのウィンドウを最小化する
 let allToMinimize = () => {
-  logger.info("Setting Changing... Screen To Min")
+  winston.log('info', "Setting Changing... Screen To Min")
   let windows = settings.get('windows') || new Array()
   _.each(windows, (window) => {
     let win = windowManager.get(window.id)
     win.minimize()
   })
-  logger.info("Setting Changed!! Screen To Min")
+  winston.log('info', "Setting Changed!! Screen To Min")
 }
 
 app.on('window-all-closed', () => {
-  logger.info("Close windows")
+  winston.log('info', "Close windows")
   if(process.platform != 'darwin') app.quit()
 })
 
 app.on('ready', () => {
 
-  logger.info("Launch...")
+  winston.log('info', "Launch...")
 
   // **************************************************
   // メインウィンドウの設定
@@ -106,7 +103,7 @@ app.on('ready', () => {
       
     })
 
-  logger.info("Resume Cards ...")
+  winston.log('info', "Resume Cards ...")
 
   // 画面一覧を取得
   let windows = settings.get('windows') || new Array()
@@ -115,7 +112,7 @@ app.on('ready', () => {
     resumeSticky(window.id)
   })
 
-  logger.info("Resumed Cards!! Resume count:" + windows.length)
+  winston.log('info', "Resumed Cards!! Resume count:" + windows.length)
 
 
   // **************************************************
@@ -140,7 +137,7 @@ app.on('ready', () => {
       },
       { label: "終了", 
         click: () => { 
-          logger.info("Quit app.")
+          winston.log('info', "Quit app.")
           app.quit()
         } 
       }
@@ -153,7 +150,7 @@ app.on('ready', () => {
       label: "Application",
       submenu: [
           { label: "Quit", accelerator: "Command+Q", click: () => { 
-            logger.info("Quit app.")
+            winston.log('info', "Quit app.")
             app.quit() 
           }}
       ]}, {
@@ -172,17 +169,17 @@ app.on('ready', () => {
   Menu.setApplicationMenu(Menu.buildFromTemplate(template))
 
   globalShortcut.register('Shift+CmdOrCtrl+N', () => {
-    logger.info("Handle shortcut. [New Card]")
+    winston.log('info', "Handle shortcut. [New Card]")
     createSticky()
   })
 
   globalShortcut.register('Shift+CmdOrCtrl+D', () => {
-    logger.info("Handle shortcut. [WINDOWS MIN]")
+    winston.log('info', "Handle shortcut. [WINDOWS MIN]")
     allToMinimize()
   })
 
   globalShortcut.register('Shift+CmdOrCtrl+F', () => {
-    logger.info("Handle shortcut. [WINDOWS TOP]")
+    winston.log('info', "Handle shortcut. [WINDOWS TOP]")
     allToFront()
   })
 })
