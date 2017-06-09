@@ -7,7 +7,7 @@
     <link rel="stylesheet" type="text/css" href="css/index.css">
   </head>
   <body>
-    <div id="card" class="ui grid">
+    <div id="card">
 
       <template v-if="!loaded">
         <div class="ui active dimmer">
@@ -15,16 +15,15 @@
         </div>
       </template>
       <template v-else>
-        <div class="ui card sixteen wide column">
 
-          <!-- 表示中の表示 -->
-          <template v-if="!editable">
-            <div class="content">
-              <!-- ヘッダー部 -->
+        <!-- 表示中の表示 -->
+        <template v-if="!editable">
+          <div id="menu" class="ui fluid top compact menu borderless inverted teal">
+            <div class="item draggable">
+              <i class="hashtag icon"></i> {{ title }}
+            </div>
 
-              <div class="ui label teal large draggable">
-                <i class="hashtag icon"></i> {{ title }}
-              </div>
+            <div class="item right">
               <div class="right floated ui icon buttons compact">
                 <button v-on:click="onEdit" class="ui button compact">
                   <i class="setting icon">&nbsp;</i>
@@ -33,49 +32,46 @@
                   <i class="close icon">&nbsp;</i>
                 </button>
               </div>
+            </div>
+          </div>
 
-              <!-- コンテンツ部 -->
-              <div class="description">
-                <div class="ui form">
-                  <div class="field">
-                    <div v-html="compiledMarkdown"></div>
-                  </div>
+          <div class="ui container">
+            <div class="description">
+              <div class="ui form">
+                <div class="field">
+                  <div v-html="compiledMarkdown"></div>
                 </div>
               </div>
             </div>
-
-          </template>
-          <!-- 編集中の表示 -->
-          <template v-else>
-            <div class="content">
-              <!-- ヘッダー部 -->
-
-              <div class="ui fluid labeled input">
-                <div class="ui label">名称</div>
-                <input type="text" placeholder="Task A" :value="title" @input="updateTitle"/>
-              </div>
-
-
-              <!-- コンテンツ部 -->
-              <div class="description">
-                <div class="ui form">
-                  <div class="field">
-                    <textarea :value="text" @input="updateText" placeholder="内容"></textarea>
-                  </div>
-                </div>
+          </div>
+        </template>
+        <!-- 編集中の表示 -->
+        <template v-else>
+          <div id="menu" class="ui fluid top compact menu borderless inverted teal">
+            <div class="item draggable">
+              <i class="hashtag icon"></i> 
+              <div class="ui input">
+                <input type="text" placeholder="名称" :value="title" @input="updateTitle"/>
               </div>
             </div>
 
-            <!-- アクションエリア -->
-            <div class="extra content">
-              <span class="right floated star">
-                <button v-on:click="onSave" class="ui button teal">Save</button>
-              </span>
+            <div class="item right">
+              <div class="right floated ui icon buttons compact">
+                <button v-on:click="onSave" class="ui button compact">
+                  <i class="checkmark icon">&nbsp;</i>
+                </button>
+              </div>
             </div>
-          </template>
+          </div>
 
+          <form class="ui form editor-body">
+            <div class="field full">
+          <textarea :value="text" @input="updateText" placeholder="内容" class="full markdown-editor"></textarea>
+          </div>
+          </form>
 
-        </div>
+        </template>
+
       </template>
 
     </div>

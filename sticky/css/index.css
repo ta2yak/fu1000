@@ -12,11 +12,31 @@ html, body {
     -webkit-app-region: drag;
     cursor: pointer;
 }
-
-.description {
-    margin-top: 25px !important;
+.menu {
+    border-bottom-left-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
 }
 
-.card {
-    box-shadow: 0 0 0 0 !important; /* Semantic-UIのカードに対する影は不要 */
+.description {
+    margin-top: 15px !important;
+    color: #999999;
+}
+
+#card {
+    height: 100%;
+}
+
+.editor-body {
+    height: calc(100% - 57px) !important;
+    width: 100% !important;
+}
+
+.full {
+    height: 100% !important;
+    width: 100% !important;
+}
+
+.markdown-editor {
+    max-height: 999em !important;
+    border: 0px solid rgba(34,36,38,.15) !important;
 }
