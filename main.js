@@ -44,8 +44,8 @@ let allToFront = () => {
   let windows = settings.get('windows') || new Array()
   _.each(windows, (window) => {
     let win = windowManager.get(window.id)
-    win.restore()
-    win.focus()
+    if(win) win.restore()
+    if(win) win.focus()
   })
   winston.log('info', "Setting Changed!! Screen To Top")
 }
@@ -56,7 +56,7 @@ let allToMinimize = () => {
   let windows = settings.get('windows') || new Array()
   _.each(windows, (window) => {
     let win = windowManager.get(window.id)
-    win.minimize()
+    if(win) win.minimize()
   })
   winston.log('info', "Setting Changed!! Screen To Min")
 }
