@@ -18,7 +18,7 @@
 
         <!-- 表示中の表示 -->
         <template v-if="!editable">
-          <div id="menu" class="ui fluid top compact menu borderless inverted teal">
+          <div id="menu" class="ui fluid top compact fixed menu borderless inverted teal">
             <div class="item draggable">
               <i class="hashtag icon"></i> {{ title }}
             </div>
@@ -35,7 +35,7 @@
             </div>
           </div>
 
-          <div class="ui container">
+          <div id="content" class="ui container">
             <div class="description">
               <div class="ui form">
                 <div class="field">
@@ -47,11 +47,11 @@
         </template>
         <!-- 編集中の表示 -->
         <template v-else>
-          <div id="menu" class="ui fluid top compact menu borderless inverted teal">
+          <div id="menu" class="ui fluid top compact fixed menu borderless inverted teal">
             <div class="item draggable">
               <i class="hashtag icon"></i> 
               <div class="ui input">
-                <input type="text" placeholder="名称" :value="title" @input="updateTitle"/>
+                <input type="text" placeholder="タイトル" :value="title" @input="updateTitle"/>
               </div>
             </div>
 
@@ -64,10 +64,10 @@
             </div>
           </div>
 
-          <form class="ui form editor-body">
+          <form id="content" class="ui form editor-body">
             <div class="field full">
-          <textarea :value="text" @input="updateText" placeholder="内容" class="full markdown-editor"></textarea>
-          </div>
+              <textarea :value="text" @input="updateText" placeholder="マークダウン形式で入力できます" class="full markdown-editor"></textarea>
+            </div>
           </form>
 
         </template>

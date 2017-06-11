@@ -67,14 +67,14 @@ let restoreWindowPosition = () => {
 
 /* タイトルを設定する */
 let setTitle = (title) => {
-  remote.getCurrentWindow().setTitle(title || "名称を入力してください")
+  remote.getCurrentWindow().setTitle(title || "タイトルを入力してください")
 }
 
 const vue = new Vue({
   el: '#card',
   data: {
     title: settings.get(window.location.hash + ".title") || '',
-    text: settings.get(window.location.hash + ".text") || '# hello',
+    text: settings.get(window.location.hash + ".text") || '# Welcome to Sticky',
     editable: false,
     loaded: false,
   },

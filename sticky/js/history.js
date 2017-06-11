@@ -23,6 +23,9 @@ const cards = new Vue({
     }
   },
   methods: {
+    onClose: () => {
+      remote.getCurrentWindow().close()
+    },
     getTimeAgo: (date) => {
       return moment(date).fromNow()
     },
@@ -31,18 +34,6 @@ const cards = new Vue({
     }, 300),
   },
   mounted: () => {
-  }
-})
-
-const menu = new Vue({
-  el: '#menu',
-  data: {
-  },
-  methods: {
-    onClose: () => {
-      remote.getCurrentWindow().close()
-    }
-  },
-  mounted: () => {
+    remote.getCurrentWindow().webContents.openDevTools()
   }
 })

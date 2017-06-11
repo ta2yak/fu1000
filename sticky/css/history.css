@@ -8,6 +8,7 @@ html, body {
     margin: 0;
     padding: 0;
 }
+
 .draggable {
     -webkit-app-region: drag;
     cursor: pointer;
@@ -19,4 +20,8 @@ html, body {
 
 .card {
     box-shadow: 0 0 0 0 !important; /* Semantic-UIのカードに対する影は不要 */
+}
+
+#content {
+    margin-top: 64px;
 }
