@@ -1,8 +1,12 @@
-const remote = require("electron").remote
+const electron = require("electron")
+const remote = electron.remote
+const ipc = electron.ipcRenderer
 const settings = require('electron-settings');
 const _ = require("lodash")
+const uuid = require("uuid")
 const moment = require("moment")
 const winston = require('winston')
+
 require('winston-loggly-bulk')
 
 winston.add(winston.transports.Loggly, {
@@ -10,6 +14,39 @@ winston.add(winston.transports.Loggly, {
     subdomain: "ta2yak",
     tags: ["Winston-NodeJS", "Sticky-Renderer"],
     json:true
+})
+
+Vue.component('history-item', {
+  template: `
+      <div class="card">
+        <div class="content">
+          <div class="header">{{ title }}</div>
+          <div class="meta">{{ fromNowString }}</div>
+          <div class="description">
+            {{ text }}
+          </div>
+        </div>
+        <div class="ui bottom attached button teal" v-on:click="restoreCard">
+          <i class="add icon"></i>
+          この内容で新しいカードを作る
+        </div>
+      </div>
+    </div>
+  `,
+  props: ['title', 'updatedAt', 'text'],
+  computed: {
+    fromNowString: function () {
+      return moment(this.updatedAt).fromNow()
+    }
+  },
+  methods: {
+    restoreCard: _.debounce( function(e) {
+      let restoreId = uuid.v4()
+      settings.set(restoreId + ".title", this.title)
+      settings.set(restoreId + ".text", this.text)
+      ipc.send('restore-card', restoreId)
+    }, 300),
+  },
 })
 
 const cards = new Vue({
@@ -26,12 +63,6 @@ const cards = new Vue({
     onClose: () => {
       remote.getCurrentWindow().close()
     },
-    getTimeAgo: (date) => {
-      return moment(date).fromNow()
-    },
-    restoreCard: _.debounce( function(e) {
-      // this.title = e.target.value
-    }, 300),
   },
   mounted: () => {
     remote.getCurrentWindow().webContents.openDevTools()

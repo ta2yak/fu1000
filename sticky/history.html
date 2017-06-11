@@ -23,19 +23,14 @@
       </div>
 
       <div id="content" class="ui cards">
-        <div class="card" v-for="item in sortedItems">
-          <div class="content">
-            <div class="header">{{ item.title }}</div>
-            <div class="meta">{{ getTimeAgo(item.updatedAt) }}</div>
-            <div class="description">
-              {{ item.text }}
-            </div>
-          </div>
-          <div class="ui bottom attached button teal">
-            <i class="add icon"></i>
-            この内容で新しいカードを作る
-          </div>
-        </div>
+        <div
+              is="history-item"
+              v-for="(item, index) in sortedItems"
+              v-bind:key="item"
+              v-bind:title="item.title"
+              v-bind:updatedAt="item.updatedAt"
+              v-bind:text="item.text"
+            ></div>
       </div>
     </div>
 

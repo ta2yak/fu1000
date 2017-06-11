@@ -1,4 +1,5 @@
 const electron = require('electron')
+const ipc = electron.ipcMain
 const windowManager = require('electron-window-manager')
 const settings = require('electron-settings')
 const uuid = require('uuid')
@@ -136,27 +137,27 @@ app.on('ready', () => {
   tray = new Tray(path.join(__dirname, 'assets', 'images', "icon.png"))
   contextMenu = Menu.buildFromTemplate([
       { label: "新しいカードを作成する", 
-        click: () => {
+        click: function() {
           createSticky()
         } 
       },
       { label: "過去の履歴を参照する", 
-        click: () => {
+        click: function() {
           showHistory()
         } 
       },
       { label: "最前面に表示する", 
-        click: () => {
+        click: function() {
           allToFront()
         } 
       },
       { label: "全てを隠す", 
-        click: () => {
+        click: function() {
           allToMinimize()
         } 
       },
       { label: "終了", 
-        click: () => { 
+        click: function() { 
           winston.log('info', "Quit app.")
           app.quit()
         } 
@@ -207,4 +208,15 @@ app.on('ready', () => {
 app.on('will-quit', () => {
   // Unregister all shortcuts.
   globalShortcut.unregisterAll()
+})
+
+// IPC
+ipc.on('restore-card', function(event, arg) {
+  winston.log('info', "Restore Card ..." + arg)
+  let windows = settings.get('windows') || new Array()
+  windows.push({id: arg})
+  settings.set('windows', windows)
+  winston.log('info', "Restored Card !! Total Card Count：" + windows.length)
+
+  resumeSticky(arg)
 })
