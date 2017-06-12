@@ -9,6 +9,8 @@ const {app, BrowserWindow, Menu, Tray, globalShortcut} = electron
 const winston = require('winston')
 require('winston-loggly-bulk')
 
+// Consoleを開くときにはTrueを設定する
+const debug = true
 // 保存内容を削除する場合に利用する
 //settings.deleteAll()
 
@@ -71,6 +73,7 @@ let showHistory = () => {
       resizable: false,
       "skip-taskbar": true,
       show: false,
+      showDevTools: debug,
   }) 
 }
 
@@ -116,7 +119,7 @@ app.on('ready', () => {
       show: false,
       maxWidth: width, 
       maxHeight: height,
-      //showDevTools: true,
+      showDevTools: debug,
     })
 
   winston.log('info', "Resume Cards ...")
