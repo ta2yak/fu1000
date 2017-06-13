@@ -3,16 +3,7 @@ const settings = require('electron-settings');
 const marked = require("marked")
 const uuid = require("uuid")
 const _ = require("lodash")
-const winston = require('winston')
-require('winston-loggly-bulk')
-
-winston.add(winston.transports.Loggly, {
-    token: "41feb295-2f15-4838-8d59-e65a7ec9b5e4",
-    subdomain: "ta2yak",
-    tags: ["Winston-NodeJS", "Sticky-Renderer"],
-    json:true
-})
-
+const winston = require('../lib').logger.renderer()
 
 let renderer = new marked.Renderer()
 renderer.listitem = (text) => {

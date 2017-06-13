@@ -5,16 +5,7 @@ const settings = require('electron-settings');
 const _ = require("lodash")
 const uuid = require("uuid")
 const moment = require("moment")
-const winston = require('winston')
-
-require('winston-loggly-bulk')
-
-winston.add(winston.transports.Loggly, {
-    token: "41feb295-2f15-4838-8d59-e65a7ec9b5e4",
-    subdomain: "ta2yak",
-    tags: ["Winston-NodeJS", "Sticky-Renderer"],
-    json:true
-})
+const winston = require('../lib').logger.renderer()
 
 Vue.component('history-item', {
   template: `

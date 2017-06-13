@@ -1,0 +1,64 @@
+/*:root {
+    --electron-resizable-margin: 3px;
+}*/
+
+html, body {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+body::-webkit-scrollbar {
+    width: 8px;
+	background-color: #333;
+}
+ 
+body::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+	border-radius: 0px 10px 10px 0px;
+	background-color: #333;
+}
+ 
+body::-webkit-scrollbar-thumb {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+	border-radius: 0px 10px 10px 0px;
+    background-color: #666;
+}
+
+.draggable {
+    -webkit-app-region: drag;
+    cursor: pointer;
+}
+.menu {
+    border-bottom-left-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+}
+
+.description {
+    margin-top: 15px !important;
+    color: #999999;
+}
+
+#card {
+    height: 100%;
+}
+
+#content {
+    margin-top: 64px;
+}
+
+.editor-body {
+    height: calc(100% - 57px) !important;
+    width: 100% !important;
+}
+
+.full {
+    height: 100% !important;
+    width: 100% !important;
+}
+
+.markdown-editor {
+    max-height: 999em !important;
+    border: 0px solid rgba(34,36,38,.15) !important;
+}

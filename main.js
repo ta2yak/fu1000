@@ -6,8 +6,7 @@ const uuid = require('uuid')
 const _ = require('lodash')
 const path = require('path')
 const {app, BrowserWindow, Menu, Tray, globalShortcut} = electron
-const winston = require('winston')
-require('winston-loggly-bulk')
+const winston = require('./lib').logger.main()
 
 // Consoleを開くときにはTrueを設定する
 const debug = true
@@ -17,18 +16,12 @@ const debug = true
 let mainWindow = null
 let tray = null
 let contextMenu = null
-winston.add(winston.transports.Loggly, {
-    token: "41feb295-2f15-4838-8d59-e65a7ec9b5e4",
-    subdomain: "ta2yak",
-    tags: ["Winston-NodeJS", "Sticky-Main"],
-    json:true
-})
 
 // 新規のカードを生成する
 let createSticky = () => {
   winston.log('info', "Create New Card ...")
   let id = uuid.v4()
-  windowManager.open(id, 'Sticky Page', "file://" + __dirname + "/sticky/index.html" + "#" + id) 
+  windowManager.open(id, 'Sticky Page', "file://" + __dirname + "/renderer/index.html" + "#" + id) 
 
   let windows = settings.get('windows') || new Array()
   windows.push({id: id})
@@ -38,7 +31,7 @@ let createSticky = () => {
 
 // 作成済みのカードを生成する
 let resumeSticky = (id) => {
-  windowManager.open(id, 'Sticky Page', "file://" + __dirname + "/sticky/index.html" + "#" + id) 
+  windowManager.open(id, 'Sticky Page', "file://" + __dirname + "/renderer/index.html" + "#" + id) 
 }
 
 // 全てのウィンドウを前面に表示する
@@ -66,7 +59,7 @@ let allToMinimize = () => {
 
 // 履歴参照画面を表示する
 let showHistory = () => {
-  windowManager.open("history", 'Sticky History', "file://" + __dirname + "/sticky/history.html", false, {
+  windowManager.open("history", 'Sticky History', "file://" + __dirname + "/renderer/history.html", false, {
       width: 290, 
       height: 400, 
       frame: false, 
