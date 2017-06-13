@@ -9,7 +9,7 @@ const {app, BrowserWindow, Menu, Tray, globalShortcut} = electron
 const winston = require('./lib').logger.main()
 
 // Consoleを開くときにはTrueを設定する
-const debug = true
+const debug = false
 // 保存内容を削除する場合に利用する
 //settings.deleteAll()
 

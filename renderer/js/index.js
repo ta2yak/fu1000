@@ -31,28 +31,28 @@ marked.setOptions({
 /* 画面サイズを保存する */
 let persistWindowSize = () => {
   let sizes = remote.getCurrentWindow().getSize()
-  settings.set(window.location.hash + ".width", sizes[0])
-  settings.set(window.location.hash + ".height", sizes[1])
+  settings.set(getCardKey() + ".width", sizes[0])
+  settings.set(getCardKey() + ".height", sizes[1])
 }
 
 /* 画面位置を保存する */
 let persistWindowPosition = () => {
   let positions = remote.getCurrentWindow().getPosition()
-  settings.set(window.location.hash + ".x", positions[0])
-  settings.set(window.location.hash + ".y", positions[1])
+  settings.set(getCardKey() + ".x", positions[0])
+  settings.set(getCardKey() + ".y", positions[1])
 }
 
 /* 画面サイズを復元する */
 let restoreWindowSize = () => {
-  let width = settings.get(window.location.hash + ".width") || 600
-  let height = settings.get(window.location.hash + ".height") || 332
+  let width = settings.get(getCardKey() + ".width") || 600
+  let height = settings.get(getCardKey() + ".height") || 332
   remote.getCurrentWindow().setSize(width, height)
 }
 
 /* 画面位置を復元する */
 let restoreWindowPosition = () => {
-  let x = settings.get(window.location.hash + ".x") || 0
-  let y = settings.get(window.location.hash + ".y") || 0
+  let x = settings.get(getCardKey() + ".x") || 0
+  let y = settings.get(getCardKey() + ".y") || 0
   remote.getCurrentWindow().setPosition(x, y)
 }
 
@@ -61,11 +61,15 @@ let setTitle = (title) => {
   remote.getCurrentWindow().setTitle(title || "タイトルを入力してください")
 }
 
+let getCardKey = () => {
+  return window.location.hash.replace("#", "")
+}
+
 const vue = new Vue({
   el: '#card',
   data: {
-    title: settings.get(window.location.hash + ".title") || '',
-    text: settings.get(window.location.hash + ".text") || '# Welcome to Sticky',
+    title: settings.get(getCardKey() + ".title") || '',
+    text: settings.get(getCardKey() + ".text") || '# Welcome to Sticky',
     editable: false,
     loaded: false,
   },
@@ -89,8 +93,8 @@ const vue = new Vue({
     },
     onSave: function(){
 
-      let prevTitle = settings.get(window.location.hash + ".title")
-      let prevText = settings.get(window.location.hash + ".text")
+      let prevTitle = settings.get(getCardKey() + ".title")
+      let prevText = settings.get(getCardKey() + ".text")
 
       if (prevTitle === this.title && prevText === this.text ) {
         winston.log('info', "No Change Data")
@@ -110,8 +114,8 @@ const vue = new Vue({
       settings.set('history', history)
 
       // 内容を保存する
-      settings.set(window.location.hash + ".title", this.title)
-      settings.set(window.location.hash + ".text", this.text)
+      settings.set(getCardKey() + ".title", this.title)
+      settings.set(getCardKey() + ".text", this.text)
       this.editable = false
       restoreWindowSize()
       restoreWindowPosition()
@@ -124,10 +128,10 @@ const vue = new Vue({
         winston.log('info', "Deleting card ...")
         // 永続化データから削除する
         let windows = settings.get('windows')
-        let key = window.location.hash
+        let key = getCardKey()
         _.remove(windows, function(w) { return ("#" + w.id) === key })
         settings.set('windows', windows)
-        settings.delete(window.location.hash)
+        settings.delete(getCardKey())
         winston.log('info', "Deleted card !!")
 
         remote.getCurrentWindow().close()
@@ -137,6 +141,11 @@ const vue = new Vue({
   mounted: function(){
     restoreWindowSize()
     restoreWindowPosition()
+    
+    console.log(settings.get(getCardKey() + ".title"))
+    console.log(settings.get(getCardKey() + ".text"))
+    debugger
+
     setTitle(this.title)
     this.loaded = true
     //remote.getCurrentWindow().webContents.openDevTools()
