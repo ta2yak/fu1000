@@ -17,7 +17,7 @@ Vue.component('history-item', {
             {{ text }}
           </div>
         </div>
-        <div class="ui bottom attached button teal" v-on:click="restoreCard">
+        <div class="ui bottom attached button pink" v-on:click="restoreCard">
           <i class="add icon"></i>
           この内容で新しいカードを作る
         </div>
@@ -56,6 +56,5 @@ const cards = new Vue({
     },
   },
   mounted: () => {
-    remote.getCurrentWindow().webContents.openDevTools()
   }
 })

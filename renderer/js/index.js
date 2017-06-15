@@ -1,4 +1,6 @@
 const remote = require("electron").remote
+const shell =  require("electron").shell
+
 const settings = require('electron-settings');
 const marked = require("marked")
 const uuid = require("uuid")
@@ -15,6 +17,10 @@ renderer.listitem = (text) => {
   } else {
     return '<li>' + text + '</li>';
   }
+}
+
+renderer.link = function (href, title, text) {
+  return "<a onclick='openExternalWindow(this)' href=\"" + href + "\" title=\"" + title + "\">" + text + "</a>";
 }
 
 marked.setOptions({
@@ -63,6 +69,11 @@ let setTitle = (title) => {
 
 let getCardKey = () => {
   return window.location.hash.replace("#", "")
+}
+
+let openExternalWindow = (linkElement) => {
+  event.preventDefault()
+  shell.openExternal(linkElement.href)
 }
 
 const vue = new Vue({
@@ -129,7 +140,7 @@ const vue = new Vue({
         // 永続化データから削除する
         let windows = settings.get('windows')
         let key = getCardKey()
-        _.remove(windows, function(w) { return ("#" + w.id) === key })
+        _.remove(windows, function(w) { return w.id === key })
         settings.set('windows', windows)
         settings.delete(getCardKey())
         winston.log('info', "Deleted card !!")
@@ -141,14 +152,8 @@ const vue = new Vue({
   mounted: function(){
     restoreWindowSize()
     restoreWindowPosition()
-    
-    console.log(settings.get(getCardKey() + ".title"))
-    console.log(settings.get(getCardKey() + ".text"))
-    debugger
-
     setTitle(this.title)
     this.loaded = true
-    //remote.getCurrentWindow().webContents.openDevTools()
   }
 })
 
