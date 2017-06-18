@@ -1,11 +1,16 @@
-const remote = require("electron").remote
-const shell =  require("electron").shell
-
+const electron = require("electron")
+const remote = electron.remote
+const shell =  electron.shell
+const path = require('path')
 const settings = require('electron-settings');
 const marked = require("marked")
 const uuid = require("uuid")
 const _ = require("lodash")
 const winston = require('../lib').logger.renderer()
+
+if(/^win/.test(process.platform)){
+  settings.setPath(path.join(electron.app.getAppPath(), 'sticky.json'))
+}
 
 let renderer = new marked.Renderer()
 renderer.listitem = (text) => {

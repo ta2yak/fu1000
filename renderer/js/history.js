@@ -1,11 +1,16 @@
 const electron = require("electron")
 const remote = electron.remote
 const ipc = electron.ipcRenderer
+const path = require('path')
 const settings = require('electron-settings');
 const _ = require("lodash")
 const uuid = require("uuid")
 const moment = require("moment")
 const winston = require('../lib').logger.renderer()
+
+if(/^win/.test(process.platform)){
+  settings.setPath(path.join(electron.app.getAppPath(), 'sticky.json'))
+}
 
 Vue.component('history-item', {
   template: `

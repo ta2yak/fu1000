@@ -8,6 +8,10 @@ const path = require('path')
 const {app, BrowserWindow, Menu, Tray, globalShortcut} = electron
 const winston = require('./lib').logger.main()
 
+if(/^win/.test(process.platform)){
+  settings.setPath(path.join(electron.app.getAppPath(), 'sticky.json'))
+}
+
 // Consoleを開くときにはTrueを設定する
 const debug = false
 // 保存内容を削除する場合に利用する
@@ -69,11 +73,6 @@ let showHistory = () => {
       showDevTools: debug,
   }) 
 }
-
-app.on('window-all-closed', () => {
-  winston.log('info', "Close windows")
-  if(process.platform != 'darwin') app.quit()
-})
 
 app.on('ready', () => {
 
