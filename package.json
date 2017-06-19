@@ -38,6 +38,7 @@
     "moment": "^2.18.1",
     "semantic-ui": "^2.2.10",
     "uuid": "^3.0.1",
+    "watchjs": "0.0.0",
     "winston": "^2.3.1",
     "winston-loggly-bulk": "^1.4.2"
   },
