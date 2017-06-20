@@ -8,23 +8,30 @@ const path = require('path')
 const {app, BrowserWindow, Menu, Tray, globalShortcut} = electron
 const winston = require('./lib').logger.main()
 
-if(/^win/.test(process.platform)){
-  settings.setPath(path.join(electron.app.getAppPath(), 'sticky.json'))
-}
 
 // Consoleを開くときにはTrueを設定する
-const debug = false
+const debug = true
 // 保存内容を削除する場合に利用する
 //settings.deleteAll()
 
 let mainWindow = null
 let tray = null
 let contextMenu = null
+let cardDataTemplate = {
+  title: "",
+  text: "# Hello",
+  width: 600,
+  height: 332,
+  x: 0,
+  y: 0,
+}
 
 // 新規のカードを生成する
 let createSticky = () => {
   winston.log('info', "Create New Card ...")
+
   let id = uuid.v4()
+  windowManager.sharedData.set(id, Object.assign({}, cardDataTemplate, {}))
   windowManager.open(id, 'Sticky Page', "file://" + __dirname + "/renderer/index.html" + "#" + id) 
 
   let windows = settings.get('windows') || new Array()
@@ -35,6 +42,7 @@ let createSticky = () => {
 
 // 作成済みのカードを生成する
 let resumeSticky = (id) => {
+  windowManager.sharedData.set(id, Object.assign({}, cardDataTemplate, settings.get(id)))
   windowManager.open(id, 'Sticky Page', "file://" + __dirname + "/renderer/index.html" + "#" + id) 
 }
 
@@ -63,6 +71,7 @@ let allToMinimize = () => {
 
 // 履歴参照画面を表示する
 let showHistory = () => {
+  windowManager.sharedData.set("history", settings.get("history") || new Array())
   windowManager.open("history", 'Sticky History', "file://" + __dirname + "/renderer/history.html", false, {
       width: 290, 
       height: 400, 
@@ -206,12 +215,56 @@ app.on('will-quit', () => {
 })
 
 // IPC
-ipc.on('restore-card', function(event, arg) {
+ipc.on('restore-card', function(event, arg /* {title:"", text:""} */) {
   winston.log('info', "Restore Card ..." + arg)
-  let windows = settings.get('windows') || new Array()
-  windows.push({id: arg})
-  settings.set('windows', windows)
-  winston.log('info', "Restored Card !! Total Card Count：" + windows.length)
+  let restoreCardId = uuid.v4()
 
-  resumeSticky(arg)
+  let windows = settings.get('windows') || new Array()
+  windows.push({id: restoreCardId})
+  settings.set('windows', windows)
+
+  settings.set(restoreCardId + ".title", arg.title)
+  settings.set(restoreCardId + ".text", arg.text)
+
+  winston.log('info', "Restored Card !!")
+
+  resumeSticky(restoreCardId)
+})
+
+ipc.on('update-card', function(event, arg /* {id:"", title:"", text:""} */) {
+  winston.log('info', "Update Card ..." + arg)
+  settings.set(arg.id + ".title", arg.title)
+  settings.set(arg.id + ".text", arg.text)
+  winston.log('info', "Updated Card !!")
+})
+
+ipc.on('update-card-size', function(event, arg /* {id:"", width:"", height:""} */) {
+  winston.log('info', "Update Card Size ..." + arg)
+  settings.set(arg.id + ".width", arg.width)
+  settings.set(arg.id + ".height", arg.height)
+  winston.log('info', "Updated Card Size !!")
+})
+
+ipc.on('update-card-position', function(event, arg /* {id:"", x:"", y:""} */) {
+  winston.log('info', "Update Card Position ..." + arg)
+  settings.set(arg.id + ".x", arg.x)
+  settings.set(arg.id + ".y", arg.y)
+  winston.log('info', "Updated Card Position !!")
+})
+
+ipc.on('delete-card', function(event, arg /* {id:""} */) {
+  winston.log('info', "Deleting card ..." + arg)
+  let windows = settings.get('windows')
+  _.remove(windows, function(w) { return w.id === arg.id })
+  settings.set('windows', windows)
+  settings.delete(arg.id)
+  winston.log('info', "Deleted card !!")
+})
+
+ipc.on('add-card-history', function(event, arg /* {title:"", text:""} */) {
+  let historyId = uuid.v4()
+  let history = settings.get('history') || new Array()
+  history.push({id: historyId, title: arg.title, text: arg.text, updatedAt: new Date()})
+  _.slice(history, 0, 50) // 50件を残す
+  settings.set('history', history)
 })

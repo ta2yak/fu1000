@@ -1,16 +1,10 @@
 const electron = require("electron")
 const remote = electron.remote
 const ipc = electron.ipcRenderer
-const path = require('path')
-const settings = require('electron-settings');
+const windowManager = require('electron-window-manager')
 const _ = require("lodash")
-const uuid = require("uuid")
 const moment = require("moment")
 const winston = require('../lib').logger.renderer()
-
-if(/^win/.test(process.platform)){
-  settings.setPath(path.join(electron.app.getAppPath(), 'sticky.json'))
-}
 
 Vue.component('history-item', {
   template: `
@@ -37,10 +31,7 @@ Vue.component('history-item', {
   },
   methods: {
     restoreCard: _.debounce( function(e) {
-      let restoreId = uuid.v4()
-      settings.set(restoreId + ".title", this.title)
-      settings.set(restoreId + ".text", this.text)
-      ipc.send('restore-card', restoreId)
+      ipc.send('restore-card', {title: this.title, text: this.text})
     }, 300),
   },
 })
@@ -48,7 +39,7 @@ Vue.component('history-item', {
 const cards = new Vue({
   el: '#cards',
   data: {
-    items: settings.get("history") || new Array(),
+    items: windowManager.sharedData.fetch("history"),
   },
   computed: {
     sortedItems: function () {

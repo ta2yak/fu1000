@@ -1,16 +1,12 @@
 const electron = require("electron")
 const remote = electron.remote
+const ipc = electron.ipcRenderer
 const shell =  electron.shell
-const path = require('path')
-const settings = require('electron-settings');
+const windowManager = require('electron-window-manager')
 const marked = require("marked")
-const uuid = require("uuid")
 const _ = require("lodash")
 const winston = require('../lib').logger.renderer()
 
-if(/^win/.test(process.platform)){
-  settings.setPath(path.join(electron.app.getAppPath(), 'sticky.json'))
-}
 
 let renderer = new marked.Renderer()
 renderer.listitem = (text) => {
@@ -39,31 +35,24 @@ marked.setOptions({
   smartypants: false
 })
 
-/* 画面サイズを保存する */
-let persistWindowSize = () => {
-  let sizes = remote.getCurrentWindow().getSize()
-  settings.set(getCardKey() + ".width", sizes[0])
-  settings.set(getCardKey() + ".height", sizes[1])
-}
-
-/* 画面位置を保存する */
-let persistWindowPosition = () => {
-  let positions = remote.getCurrentWindow().getPosition()
-  settings.set(getCardKey() + ".x", positions[0])
-  settings.set(getCardKey() + ".y", positions[1])
+/* カードIDを取得 */
+let getCardId = () => {
+  return window.location.hash.replace("#", "")
 }
 
 /* 画面サイズを復元する */
 let restoreWindowSize = () => {
-  let width = settings.get(getCardKey() + ".width") || 600
-  let height = settings.get(getCardKey() + ".height") || 332
+  let data = windowManager.sharedData.fetch(getCardId())
+  let width = data.width
+  let height = data.height
   remote.getCurrentWindow().setSize(width, height)
 }
 
 /* 画面位置を復元する */
 let restoreWindowPosition = () => {
-  let x = settings.get(getCardKey() + ".x") || 0
-  let y = settings.get(getCardKey() + ".y") || 0
+  let data = windowManager.sharedData.fetch(getCardId())
+  let x = data.x
+  let y = data.y
   remote.getCurrentWindow().setPosition(x, y)
 }
 
@@ -72,10 +61,7 @@ let setTitle = (title) => {
   remote.getCurrentWindow().setTitle(title || "タイトルを入力してください")
 }
 
-let getCardKey = () => {
-  return window.location.hash.replace("#", "")
-}
-
+/* 外部リンクを開く */
 let openExternalWindow = (linkElement) => {
   event.preventDefault()
   shell.openExternal(linkElement.href)
@@ -84,8 +70,8 @@ let openExternalWindow = (linkElement) => {
 const vue = new Vue({
   el: '#card',
   data: {
-    title: settings.get(getCardKey() + ".title") || '',
-    text: settings.get(getCardKey() + ".text") || '# Welcome to Sticky',
+    title: windowManager.sharedData.fetch(getCardId()).title || '',
+    text: windowManager.sharedData.fetch(getCardId()).text || '# Welcome to Sticky',
     editable: false,
     loaded: false,
   },
@@ -102,15 +88,12 @@ const vue = new Vue({
       this.text = e.target.value
     }, 300),
     onEdit: function(){
-      persistWindowSize()
-      persistWindowPosition()
-
       this.editable = true
     },
     onSave: function(){
 
-      let prevTitle = settings.get(getCardKey() + ".title")
-      let prevText = settings.get(getCardKey() + ".text")
+      let prevTitle = windowManager.sharedData.fetch(getCardId()).title
+      let prevText = windowManager.sharedData.fetch(getCardId()).text
 
       if (prevTitle === this.title && prevText === this.text ) {
         winston.log('info', "No Change Data")
@@ -123,33 +106,24 @@ const vue = new Vue({
       winston.log('info', "Saving form ...")
 
       // 履歴に追記する
-      let historyId = uuid.v4()
-      let history = settings.get('history') || new Array()
-      history.push({id: historyId, title: this.title, text: this.text, updatedAt: new Date()})
-      _.slice(history, 0, 10) // 10件を残す
-      settings.set('history', history)
-
+      ipc.send('add-card-history', {title: this.title, text: this.text})
       // 内容を保存する
-      settings.set(getCardKey() + ".title", this.title)
-      settings.set(getCardKey() + ".text", this.text)
+      ipc.send('update-card', {id: getCardId(), title: this.title, text: this.text})
+
       this.editable = false
+
       restoreWindowSize()
       restoreWindowPosition()
       setTitle(this.title)
+
       winston.log('info', "Saved form !!")
 
     },
     onClose: function(){
       if (confirm("このカードを削除してもよろしいですか？\n※ 一度削除すると復元できません")) {
         winston.log('info', "Deleting card ...")
-        // 永続化データから削除する
-        let windows = settings.get('windows')
-        let key = getCardKey()
-        _.remove(windows, function(w) { return w.id === key })
-        settings.set('windows', windows)
-        settings.delete(getCardKey())
+        ipc.send('delete-card', {id: getCardId()})
         winston.log('info', "Deleted card !!")
-
         remote.getCurrentWindow().close()
       }
     }
@@ -163,9 +137,11 @@ const vue = new Vue({
 })
 
 remote.getCurrentWindow().on('resize', function (e) {
-  persistWindowSize()
+  let sizes = remote.getCurrentWindow().getSize()
+  ipc.send('update-card-size', {id: getCardId(), width: sizes[0], height: sizes[1]})
 })
 
 remote.getCurrentWindow().on('move', function (e) {
-  persistWindowPosition()
+  let positions = remote.getCurrentWindow().getPosition()
+  ipc.send('update-card-position', {id: getCardId(), x: positions[0], y: positions[1]})
 })
