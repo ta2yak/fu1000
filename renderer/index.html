@@ -18,12 +18,12 @@
 
         <!-- 表示中の表示 -->
         <template v-if="!editable">
-          <div id="menu" class="ui fluid top compact fixed menu borderless inverted teal">
-            <div class="item draggable">
+          <div id="menu" class="ui fluid top compact fixed menu borderless inverted teal draggable">
+            <div class="item">
               <i class="hashtag icon"></i> {{ title }}
             </div>
 
-            <div class="item right">
+            <div class="item right no-drag">
               <div class="right floated ui icon buttons compact">
                 <button v-on:click="onEdit" class="ui button compact">
                   <i class="setting icon">&nbsp;</i>
@@ -47,15 +47,15 @@
         </template>
         <!-- 編集中の表示 -->
         <template v-else>
-          <div id="menu" class="ui fluid top compact fixed menu borderless inverted teal">
+          <div id="menu" class="ui fluid top compact fixed menu borderless inverted teal draggable">
             <div class="item">
-              <i class="hashtag icon draggable"></i> 
-              <div class="ui input">
+              <i class="hashtag icon"></i> 
+              <div class="ui input no-drag">
                 <input type="text" placeholder="タイトル" :value="title" @input="updateTitle"/>
               </div>
             </div>
 
-            <div class="item right">
+            <div class="item right no-drag">
               <div class="right floated ui icon buttons compact">
                 <button v-on:click="onSave" class="ui button compact">
                   <i class="checkmark icon">&nbsp;</i>

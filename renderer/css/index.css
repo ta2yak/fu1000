@@ -7,6 +7,8 @@ html, body {
     width: 100%;
     margin: 0;
     padding: 0;
+    border-bottom-left-radius: 10 !important;
+    border-bottom-right-radius: 10 !important;
 }
 
 body::-webkit-scrollbar {
@@ -30,6 +32,11 @@ body::-webkit-scrollbar-thumb {
     -webkit-app-region: drag;
     cursor: pointer;
 }
+
+.no-drag {
+    -webkit-app-region: no-drag;
+}
+
 .menu {
     border-bottom-left-radius: 0 !important;
     border-bottom-right-radius: 0 !important;
