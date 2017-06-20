@@ -6,11 +6,14 @@ const uuid = require('uuid')
 const _ = require('lodash')
 const path = require('path')
 const {app, BrowserWindow, Menu, Tray, globalShortcut} = electron
+const notifier = require('node-notifier')
+const CronJob = require('cron').CronJob
+const moment = require('moment')
 const winston = require('./lib').logger.main()
 
 
 // Consoleを開くときにはTrueを設定する
-const debug = true
+const debug = false
 // 保存内容を削除する場合に利用する
 //settings.deleteAll()
 
@@ -85,6 +88,23 @@ let showHistory = () => {
   }) 
 }
 
+let showNotify = (title, message) => [
+  notifier.notify({
+      title: title,
+      message: message,
+      sound: true,
+      wait: true,
+      contentImage: 'file://' + __dirname + '/assets/images/icon-full.png'
+  }, function (err, response) {
+      console.log(response)
+  })
+]
+
+// 試験的に時刻通知機能をつけてみる
+new CronJob('*/15 * * * *', function() {
+  showNotify("15分刻みにお知らせ！", moment().format("YYYY年MM月DD日 HH時mm分 です"))
+}, null, true, 'Asia/Tokyo')
+
 app.on('ready', () => {
 
   winston.log('info', "Launch...")
@@ -135,7 +155,6 @@ app.on('ready', () => {
   })
 
   winston.log('info', "Resumed Cards!! Resume count:" + windows.length)
-
 
   // **************************************************
   // タスクトレイの設定
