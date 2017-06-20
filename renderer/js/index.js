@@ -2,7 +2,7 @@ const electron = require("electron")
 const remote = electron.remote
 const ipc = electron.ipcRenderer
 const shell =  electron.shell
-const windowManager = require('electron-window-manager')
+const windowManager = remote.require('electron-window-manager')
 const marked = require("marked")
 const _ = require("lodash")
 const winston = require('../lib').logger.renderer()
@@ -70,8 +70,8 @@ let openExternalWindow = (linkElement) => {
 const vue = new Vue({
   el: '#card',
   data: {
-    title: windowManager.sharedData.fetch(getCardId()).title || '',
-    text: windowManager.sharedData.fetch(getCardId()).text || '# Welcome to Sticky',
+    title: windowManager.sharedData.fetch(getCardId()).title,
+    text: windowManager.sharedData.fetch(getCardId()).text,
     editable: false,
     loaded: false,
   },
@@ -121,9 +121,7 @@ const vue = new Vue({
     },
     onClose: function(){
       if (confirm("このカードを削除してもよろしいですか？\n※ 一度削除すると復元できません")) {
-        winston.log('info', "Deleting card ...")
         ipc.send('delete-card', {id: getCardId()})
-        winston.log('info', "Deleted card !!")
         remote.getCurrentWindow().close()
       }
     }

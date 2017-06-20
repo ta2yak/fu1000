@@ -17,6 +17,8 @@ const debug = true
 let mainWindow = null
 let tray = null
 let contextMenu = null
+
+/* 初期カードデータ */
 let cardDataTemplate = {
   title: "",
   text: "# Hello",
@@ -239,17 +241,13 @@ ipc.on('update-card', function(event, arg /* {id:"", title:"", text:""} */) {
 })
 
 ipc.on('update-card-size', function(event, arg /* {id:"", width:"", height:""} */) {
-  winston.log('info', "Update Card Size ..." + arg)
   settings.set(arg.id + ".width", arg.width)
   settings.set(arg.id + ".height", arg.height)
-  winston.log('info', "Updated Card Size !!")
 })
 
 ipc.on('update-card-position', function(event, arg /* {id:"", x:"", y:""} */) {
-  winston.log('info', "Update Card Position ..." + arg)
   settings.set(arg.id + ".x", arg.x)
   settings.set(arg.id + ".y", arg.y)
-  winston.log('info', "Updated Card Position !!")
 })
 
 ipc.on('delete-card', function(event, arg /* {id:""} */) {
@@ -262,9 +260,11 @@ ipc.on('delete-card', function(event, arg /* {id:""} */) {
 })
 
 ipc.on('add-card-history', function(event, arg /* {title:"", text:""} */) {
+  winston.log('info', "Adding history ..." + arg)
   let historyId = uuid.v4()
   let history = settings.get('history') || new Array()
   history.push({id: historyId, title: arg.title, text: arg.text, updatedAt: new Date()})
   _.slice(history, 0, 50) // 50件を残す
   settings.set('history', history)
+  winston.log('info', "Added history !!")
 })
