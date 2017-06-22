@@ -72,7 +72,7 @@ const vue = new Vue({
   data: {
     title: windowManager.sharedData.fetch(getCardId()).title,
     text: windowManager.sharedData.fetch(getCardId()).text,
-    editable: false,
+    editable: windowManager.sharedData.fetch(getCardId()).title ? false : true,
     loaded: false,
   },
   computed: {
@@ -91,6 +91,11 @@ const vue = new Vue({
       this.editable = true
     },
     onSave: function(){
+
+      if (this.title == "") {
+        confirm("タイトルは必ず入力してください")
+        return
+      }
 
       let prevTitle = windowManager.sharedData.fetch(getCardId()).title
       let prevText = windowManager.sharedData.fetch(getCardId()).text
