@@ -7,6 +7,12 @@ const marked = require("marked")
 const _ = require("lodash")
 const winston = require('../lib').logger.renderer()
 
+const Vue = require("vue")
+const Vuex = require("vuex")
+
+Vue.use(Vuex)
+
+const CardStore = require("../src/store/card")
 
 let renderer = new marked.Renderer()
 renderer.listitem = (text) => {
