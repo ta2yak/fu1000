@@ -1,3 +1,4 @@
+import Vue from 'vue'
 import Vuex from 'vuex'
 import electron from 'electron' 
 
@@ -6,7 +7,7 @@ const ipc = electron.ipcRenderer
 const windowManager = remote.require('electron-window-manager')
  
 const getCardId = () => {
-    return getCardId()
+    return window.location.hash.replace("#", "")
 }
 
 const state = {
@@ -23,6 +24,7 @@ const state = {
 }
  
 const getters = {
+    
 }
  
 const actions = {
@@ -101,8 +103,6 @@ const actions = {
         // 内容を保存する
         ipc.send('update-card', {id: getCardId(), title: card.title, text: card.text})
 
-        this.editable = false
-
         commit("setCardData", {
             title: card.title,
             text: card.text,
@@ -122,6 +122,7 @@ const mutations = {
     },
 }
  
+Vue.use(Vuex)
 export default new Vuex.Store({
     state,
     getters,

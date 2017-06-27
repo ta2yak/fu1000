@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="container">
         <template v-if="!loaded">
             <loader></loader>
         </template>
@@ -26,31 +26,36 @@
     const Editor = require('./Editor.vue')
 
     export default {
-        data() {
-            return {
-                title: this.$store.state.title,
-                width: this.$store.state.width,
-                height: this.$store.state.height,
-                x: this.$store.state.x,
-                y: this.$store.state.y,
-                loaded: this.$store.state.loaded,
-                editable: this.$store.state.editable,
-            }
+        components: {
+            Loader,
+            Viewer,
+            Editor,
         },
-        updated() {
+        computed: {
+            title () { return this.$store.state.card.title },
+            width () { return this.$store.state.card.width },
+            height () { return this.$store.state.card.height },
+            x () { return this.$store.state.card.x },
+            y () { return this.$store.state.card.y },
+            loaded () { return this.$store.state.card.loaded },
+            editable () { return this.$store.state.card.editable },
+        },
+        mounted() {
             this.$store.dispatch('fetchCard')
             remote.getCurrentWindow().setSize(this.width, this.height)
             remote.getCurrentWindow().setPosition(this.x, this.y)
             remote.getCurrentWindow().setTitle(this.title || "タイトルを入力してください")
-        }
+
+            let dispatcher = this.$store
+            remote.getCurrentWindow().on('resize', function (e) {
+                dispatcher.dispatch('updateCardSize')
+            })
+
+            remote.getCurrentWindow().on('move', function (e) {
+                dispatcher.dispatch('updateCardPosition')
+            })
+
+        },
     }
-
-    remote.getCurrentWindow().on('resize', function (e) {
-        this.$store.dispatch('updateCardSize')
-    })
-
-    remote.getCurrentWindow().on('move', function (e) {
-        this.$store.dispatch('updateCardPosition')
-    })
 
 </script>

@@ -1,3 +1,4 @@
+import Vue from 'vue'
 import Vuex from 'vuex'
 import electron from 'electron' 
 
@@ -5,10 +6,6 @@ const remote = electron.remote
 const ipc = electron.ipcRenderer
 const windowManager = remote.require('electron-window-manager')
  
-const getCardId = () => {
-    return getCardId()
-}
-
 const state = {
     items: []
 }
@@ -30,11 +27,12 @@ const actions = {
 }
  
 const mutations = {
-    setItems (state, items) {
-        state.items = items
+    setItems (state, payload) {
+        state.items = payload.items
     },
 }
  
+Vue.use(Vuex)
 export default new Vuex.Store({
     state,
     getters,

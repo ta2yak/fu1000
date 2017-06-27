@@ -18,6 +18,7 @@
     const electron = require("electron")
     const remote = electron.remote
     const _ = require("lodash")
+    const moment = require("moment")
 
     export default {
         props: ['title', 'updatedAt', 'text'],

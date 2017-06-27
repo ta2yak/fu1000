@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="full">
         <div id="menu" class="ui fluid top compact fixed menu borderless inverted teal draggable">
             <div class="item">
                 <i class="hashtag icon"></i> 
@@ -17,7 +17,7 @@
             </div>
         </div>
 
-        <form id="content" class="ui form editor-body">
+        <form id="content" class="ui form full">
             <div class="field full">
                 <textarea :value="text" @input="updateText" placeholder="マークダウン形式で入力できます" class="full markdown-editor"></textarea>
             </div>
@@ -33,9 +33,9 @@
     const _ = require("lodash")
 
     export default {
-        data: {
-            title: this.$store.state.title,
-            text: this.$store.state.text,
+        computed: {
+            title () { return this.$store.state.card.title },
+            text () { return this.$store.state.card.text },
         },
         methods: {
             updateTitle: _.debounce(function (e) {

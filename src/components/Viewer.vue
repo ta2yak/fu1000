@@ -71,18 +71,15 @@
     })
 
     export default {
-        data: {
-            title: this.$store.state.title,
-            text: this.$store.state.text,
-        },
         computed: {
+            title () { return this.$store.state.card.title },
+            text () { return this.$store.state.card.text },
             compiledMarkdown: function () {
                 return marked(this.text, { sanitize: true })
             }
         },
         methods: {
             onEdit: function(){
-                debugger
                 this.$store.dispatch('startEdit')
             },
             onClose: function(){

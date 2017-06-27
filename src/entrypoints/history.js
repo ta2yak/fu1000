@@ -1,9 +1,8 @@
 import 'babel-polyfill'
 import Vue from 'vue'
+import Vuex from 'vuex'
 import History from '../components/History.vue'
 import store from '../store/history'
-
-Vue.config.debug = true
 
 new Vue({
     el: '#history',

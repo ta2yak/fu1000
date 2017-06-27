@@ -32,18 +32,22 @@
     const HistoryItem = require("./HistoryItem.vue")
 
     export default {
-        data: {
-            items: this.$store.state.items,
+        components: {
+            HistoryItem,
         },
         computed: {
             sortedItems: function () {
-                return _.reverse(this.items)
+                console.log(this.$store.state.items)
+                return _.reverse(this.$store.state.items)
             }
         },
         methods: {
             onClose: () => {
                 remote.getCurrentWindow().close()
             },
+        },
+        mounted() {
+            this.$store.dispatch('fetchHistory')
         },
     }
 

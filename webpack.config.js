@@ -1,4 +1,9 @@
-const path = require('path');
+const webpack = require("webpack")
+const path = require('path')
+
+let IS_PRODUCION = process.env.NODE_ENV === "production" ? true : false
+
+console.log("PRODUCTION MODE IS " + IS_PRODUCION)
 
 module.exports = {
   /* ビルドの起点となるファイルの設定 */
@@ -11,7 +16,17 @@ module.exports = {
     path: path.join(__dirname, '/renderer/js'), // 出力先のパス
     filename: `[name].js` // 出力先のファイル名
   },
-  /* ソースマップをファイル内に出力させる場合は以下を追加 */
+  plugins: IS_PRODUCION ? [
+      new webpack.optimize.UglifyJsPlugin({
+          compress: {
+              warnings: false,
+              screw_ie8: true
+          }
+      }),
+      new webpack.optimize.OccurrenceOrderPlugin(),
+      new webpack.optimize.AggressiveMergingPlugin()
+  ] : [],
+  /* ソースマップをファイル内に出力させる */
   devtool: 'source-map',
   module: {
     /* loaderの設定 */
