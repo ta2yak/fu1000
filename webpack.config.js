@@ -1,8 +1,9 @@
 const webpack = require("webpack")
 const path = require('path')
 
-let IS_PRODUCION = process.env.NODE_ENV === "production" ? true : false
+let IS_PRODUCION = (process.env.NODE_ENV || 'development').trim() === "production" ? true : false
 
+console.log("'process.env.NODE_ENV' IS " + process.env.NODE_ENV)
 console.log("PRODUCTION MODE IS " + IS_PRODUCION)
 
 module.exports = {
