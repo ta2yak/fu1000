@@ -47,22 +47,8 @@ body::-webkit-scrollbar-thumb {
     color: #999999;
 }
 
-#card {
-    height: 100%;
-}
-
 #content {
     margin-top: 64px;
-}
-
-.editor-body {
-    height: calc(100% - 57px) !important;
-    width: 100% !important;
-}
-
-.full {
-    height: 100% !important;
-    width: 100% !important;
 }
 
 .markdown-editor {

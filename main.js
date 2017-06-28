@@ -37,7 +37,7 @@ let createSticky = () => {
 
   let id = uuid.v4()
   windowManager.sharedData.set(id, Object.assign({}, cardDataTemplate, {}))
-  windowManager.open(id, 'Sticky Page', "file://" + __dirname + "/renderer/index.html" + "#" + id) 
+  windowManager.open(id, 'Sticky Page', "file://" + __dirname + "/renderer/card.html" + "#" + id) 
 
   let windows = settings.get('windows') || new Array()
   windows.push({id: id})
@@ -48,7 +48,7 @@ let createSticky = () => {
 // 作成済みのカードを生成する
 let resumeSticky = (id) => {
   windowManager.sharedData.set(id, Object.assign({}, cardDataTemplate, settings.get(id)))
-  windowManager.open(id, 'Sticky Page', "file://" + __dirname + "/renderer/index.html" + "#" + id) 
+  windowManager.open(id, 'Sticky Page', "file://" + __dirname + "/renderer/card.html" + "#" + id) 
 }
 
 // 全てのウィンドウを前面に表示する

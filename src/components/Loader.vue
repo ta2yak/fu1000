@@ -1,0 +1,5 @@
+<template>
+    <div class="ui active dimmer">
+        <div class="ui loader"></div>
+    </div>
+</template>
