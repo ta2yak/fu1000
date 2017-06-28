@@ -1,5 +1,5 @@
 <template>
-    <div class="full">
+    <div>
         <div id="menu" class="ui fluid top compact fixed menu borderless inverted teal draggable">
             <div class="item">
                 <i class="hashtag icon"></i> 
@@ -17,9 +17,9 @@
             </div>
         </div>
 
-        <form id="content" class="ui form full">
-            <div class="field full">
-                <textarea :value="text" @input="updateText" placeholder="マークダウン形式で入力できます" class="full markdown-editor"></textarea>
+        <form id="content" class="ui form">
+            <div class="field">
+                <textarea :value="text" @input="updateText" :rows="rows" placeholder="マークダウン形式で入力できます" class="markdown-editor"></textarea>
             </div>
         </form>
     </div>
@@ -36,6 +36,10 @@
         computed: {
             title () { return this.$store.state.card.title },
             text () { return this.$store.state.card.text },
+            rows:function(){
+                var num = this.$store.state.card.text.split("\n").length
+                return (num > 10) ? num : 10;
+            },
         },
         methods: {
             updateTitle: _.debounce(function (e) {

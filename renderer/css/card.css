@@ -11,13 +11,6 @@ html, body {
     border-bottom-right-radius: 10 !important;
 }
 
-.container {
-    height: 100%;
-    width: 100%;
-    margin: 0;
-    padding: 0;
-}
-
 body::-webkit-scrollbar {
     width: 8px;
 	background-color: #333;
@@ -54,17 +47,8 @@ body::-webkit-scrollbar-thumb {
     color: #999999;
 }
 
-#card {
-    height: 100%;
-}
-
 #content {
     margin-top: 64px;
-}
-
-.full {
-    height: 100% !important;
-    width: 100% !important;
 }
 
 .markdown-editor {

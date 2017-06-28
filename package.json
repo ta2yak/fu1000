@@ -4,8 +4,8 @@
   "description": "",
   "main": "main.js",
   "scripts": {
-    "compile-dev": "NODE_ENV=development webpack",
-    "compile": "NODE_ENV=production webpack",
+    "compile-dev": "SET NODE_ENV=development && webpack",
+    "compile": "SET NODE_ENV=production && webpack",
     "start": "electron .",
     "test": "echo \"Warning: no test specified\"",
     "clean": "rm -rf ./publish",
