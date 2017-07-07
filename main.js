@@ -13,7 +13,7 @@ const winston = require('./lib').logger.main()
 
 
 // Consoleを開くときにはTrueを設定する
-const debug = false
+const debug = true
 // 保存内容を削除する場合に利用する
 //settings.deleteAll()
 

@@ -33,10 +33,10 @@
     const electron = require("electron")
     const remote = electron.remote
     const ipc = electron.ipcRenderer
-    const shell =  electron.shell
     const windowManager = remote.require('electron-window-manager')
     const marked = require("marked")
     const _ = require("lodash")
+
 
     let renderer = new marked.Renderer()
     renderer.listitem = (text) => {
@@ -50,13 +50,8 @@
         }
     }
 
-    let openExternalWindow = (linkElement) => {
-    event.preventDefault()
-    shell.openExternal(linkElement.href)
-    }
-
     renderer.link = function (href, title, text) {
-        return "<a onclick='openExternalWindow(this)' href=\"" + href + "\" title=\"" + title + "\">" + text + "</a>";
+        return "<a onclick='openExternalLink(\"" + href + "\"); return false;' href=\"" + href + "\" title=\"" + title + "\">" + text + "</a>";
     }
 
     marked.setOptions({
@@ -87,7 +82,7 @@
                     this.$store.dispatch('closeCard')
                     remote.getCurrentWindow().close()
                 }
-            }
+            },
         },
     }
 
